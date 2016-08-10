@@ -1,7 +1,7 @@
 {
    "chart":{
       "chartType":"crosstab",
-      "xaxisTitles":"Sum of Sales",
+      "xaxisTitles":"sos",
       "tab_titles":"region",
       "product_name":"Product Type",
       "sub_product_name":"Product",
@@ -9,309 +9,310 @@
       "minProfitColor":"#ff6600",
       "maxLossColor":"#B71C1C",
       "minLossColor":"#E57373",
-      "numberprefix":"$"
+      "numberprefix":"$",
+      "chartDiv":"chart"
    },
    "data":[
       {
          "product":"Coffee",
          "sub_product":"Amaretto",
          "region":"Central",
-         "Sum of Profit":0.5105,
-         "Sum of Sales":0.14011
+         "sop":0.5105,
+         "sos":0.14011
       },
       {
          "product":"Coffee",
          "sub_product":"Amaretto",
          "region":"East",
-         "Sum of Profit":1009,
-         "Sum of Sales":2993
+         "sop":1009,
+         "sos":2993
       },
       {
          "product":"Coffee",
          "sub_product":"Amaretto",
          "region":"West",
-         "Sum of Profit":-1225,
-         "Sum of Sales":9265
+         "sop":-1225,
+         "sos":9265
       },
       {
          "product":"Coffee",
          "sub_product":"Columbian",
          "region":"Central",
-         "Sum of Profit":8528,
-         "Sum of Sales":28913
+         "sop":8528,
+         "sos":28913
       },
       {
          "product":"Coffee",
          "sub_product":"Columbian",
          "region":"East",
-         "Sum of Profit":27253,
-         "Sum of Sales":47386
+         "sop":27253,
+         "sos":47386
       },
       {
          "product":"Coffee",
          "sub_product":"Columbian",
          "region":"South",
-         "Sum of Profit":8767,
-         "Sum of Sales":21664
+         "sop":8767,
+         "sos":21664
       },
       {
          "product":"Coffee",
          "sub_product":"Columbian",
          "region":"West",
-         "Sum of Profit":11253,
-         "Sum of Sales":30357
+         "sop":11253,
+         "sos":30357
       },
       {
          "product":"Coffee",
          "sub_product":"Decaf Irish Cream",
          "region":"Central",
-         "Sum of Profit":9632,
-         "Sum of Sales":26155
+         "sop":9632,
+         "sos":26155
       },
       {
          "product":"Coffee",
          "sub_product":"Decaf Irish Cream",
          "region":"East",
-         "Sum of Profit":2727,
-         "Sum of Sales":6261
+         "sop":2727,
+         "sos":6261
       },
       {
          "product":"Coffee",
          "sub_product":"Decaf Irish Cream",
          "region":"South",
-         "Sum of Profit":2933,
-         "Sum of Sales":11592
+         "sop":2933,
+         "sos":11592
       },
       {
          "product":"Coffee",
          "sub_product":"Decaf Irish Cream",
          "region":"West",
-         "Sum of Profit":-1305,
-         "Sum of Sales":18235
+         "sop":-1305,
+         "sos":18235
       },
       {
          "product":"Espresso",
          "sub_product":"Caffe Latte",
          "region":"South",
-         "Sum of Profit":3872,
-         "Sum of Sales":15442
+         "sop":3872,
+         "sos":15442
       },
       {
          "product":"Espresso",
          "sub_product":"Caffe Latte",
          "region":"West",
-         "Sum of Profit":7502,
-         "Sum of Sales":20458
+         "sop":7502,
+         "sos":20458
       },
       {
          "product":"Espresso",
          "sub_product":"Caffe Mocha",
          "region":"Central",
-         "Sum of Profit":14640,
-         "Sum of Sales":36570
+         "sop":14640,
+         "sos":36570
       },
       {
          "product":"Espresso",
          "sub_product":"Caffe Mocha",
          "region":"East",
-         "Sum of Profit":-6230,
-         "Sum of Sales":16646
+         "sop":-6230,
+         "sos":16646
       },
       {
          "product":"Espresso",
          "sub_product":"Caffe Mocha",
          "region":"South",
-         "Sum of Profit":5201,
-         "Sum of Sales":14163
+         "sop":5201,
+         "sos":14163
       },
       {
          "product":"Espresso",
          "sub_product":"Caffe Mocha",
          "region":"West",
-         "Sum of Profit":4064,
-         "Sum of Sales":18876
+         "sop":4064,
+         "sos":18876
       },
       {
          "product":"Espresso",
          "sub_product":"Decaf Espresso",
          "region":"Central",
-         "Sum of Profit":8860,
-         "Sum of Sales":24485
+         "sop":8860,
+         "sos":24485
       },
       {
          "product":"Espresso",
          "sub_product":"Decaf Espresso",
          "region":"East",
-         "Sum of Profit":2410,
-         "Sum of Sales":7722
+         "sop":2410,
+         "sos":7722
       },
       {
          "product":"Espresso",
          "sub_product":"Decaf Espresso",
          "region":"South",
-         "Sum of Profit":5930,
-         "Sum of Sales":15384
+         "sop":5930,
+         "sos":15384
       },
       {
          "product":"Espresso",
          "sub_product":"Decaf Espresso",
          "region":"West",
-         "Sum of Profit":12302,
-         "Sum of Sales":30578
+         "sop":12302,
+         "sos":30578
       },
       {
          "product":"Espresso",
          "sub_product":"Regular Espresso",
          "region":"East",
-         "Sum of Profit":10062,
-         "Sum of Sales":24036
+         "sop":10062,
+         "sos":24036
       },
       {
          "product":"Herbal Tea",
          "sub_product":"Chamomile",
          "region":"Central",
-         "Sum of Profit":14434,
-         "Sum of Sales":36570
+         "sop":14434,
+         "sos":36570
       },
       {
          "product":"Herbal Tea",
          "sub_product":"Chamomile",
          "region":"East",
-         "Sum of Profit":765,
-         "Sum of Sales":2194
+         "sop":765,
+         "sos":2194
       },
       {
          "product":"Herbal Tea",
          "sub_product":"Chamomile",
          "region":"South",
-         "Sum of Profit":3180,
-         "Sum of Sales":11186
+         "sop":3180,
+         "sos":11186
       },
       {
          "product":"Herbal Tea",
          "sub_product":"Chamomile",
          "region":"West",
-         "Sum of Profit":8852,
-         "Sum of Sales":25632
+         "sop":8852,
+         "sos":25632
       },
       {
          "product":"Herbal Tea",
          "sub_product":"Lemon",
          "region":"Central",
-         "Sum of Profit":6251,
-         "Sum of Sales":21978
+         "sop":6251,
+         "sos":21978
       },
       {
          "product":"Herbal Tea",
          "sub_product":"Lemon",
          "region":"East",
-         "Sum of Profit":7901,
-         "Sum of Sales":27176
+         "sop":7901,
+         "sos":27176
       },
       {
          "product":"Herbal Tea",
          "sub_product":"Lemon",
          "region":"South",
-         "Sum of Profit":2593,
-         "Sum of Sales":14497
+         "sop":2593,
+         "sos":14497
       },
       {
          "product":"Herbal Tea",
          "sub_product":"Lemon",
          "region":"West",
-         "Sum of Profit":13120,
-         "Sum of Sales":32274
+         "sop":13120,
+         "sos":32274
       },
       {
          "product":"Herbal Tea",
          "sub_product":"Mint",
          "region":"Central",
-         "Sum of Profit":4069,
-         "Sum of Sales":9337
+         "sop":4069,
+         "sos":9337
       },
       {
          "product":"Herbal Tea",
          "sub_product":"Mint",
          "region":"East",
-         "Sum of Profit":-2242,
-         "Sum of Sales":11992
+         "sop":-2242,
+         "sos":11992
       },
       {
          "product":"Herbal Tea",
          "sub_product":"Mint",
          "region":"West",
-         "Sum of Profit":4330,
-         "Sum of Sales":14380
+         "sop":4330,
+         "sos":14380
       },
       {
          "product":"Tea",
          "sub_product":"Darjeeling",
          "region":"Central",
-         "Sum of Profit":10772,
-         "Sum of Sales":30289
+         "sop":10772,
+         "sos":30289
       },
       {
          "product":"Tea",
          "sub_product":"Darjeeling",
          "region":"East",
-         "Sum of Profit":6497,
-         "Sum of Sales":14096
+         "sop":6497,
+         "sos":14096
       },
       {
          "product":"Tea",
          "sub_product":"Darjeeling",
          "region":"West",
-         "Sum of Profit":11780,
-         "Sum of Sales":28769
+         "sop":11780,
+         "sos":28769
       },
       {
          "product":"Tea",
          "sub_product":"Earl Grey",
          "region":"Central",
-         "Sum of Profit":10331,
-         "Sum of Sales":32881
+         "sop":10331,
+         "sos":32881
       },
       {
          "product":"Tea",
          "sub_product":"Earl Grey",
          "region":"East",
-         "Sum of Profit":6497,
-         "Sum of Sales":14096
+         "sop":6497,
+         "sos":14096
       },
       {
          "product":"Tea",
          "sub_product":"Earl Grey",
          "region":"West",
-         "Sum of Profit":10425,
-         "Sum of Sales":27387
+         "sop":10425,
+         "sos":27387
       },
       {
          "product":"Tea",
          "sub_product":"Green Tea",
          "region":"Central",
-         "Sum of Profit":1227,
-         "Sum of Sales":5211
+         "sop":1227,
+         "sos":5211
       },
       {
          "product":"Tea",
          "sub_product":"Green Tea",
          "region":"East",
-         "Sum of Profit":5654,
-         "Sum of Sales":11571
+         "sop":5654,
+         "sos":11571
       },
       {
          "product":"Tea",
          "sub_product":"Green Tea",
          "region":"South",
-         "Sum of Profit":104,
-         "Sum of Sales":27100
+         "sop":104,
+         "sos":27100
       },
       {
          "product":"Tea",
          "sub_product":"Green Tea",
          "region":"West",
-         "Sum of Profit":-7109,
-         "Sum of Sales":16063
+         "sop":-7109,
+         "sos":16063
       }
    ]
 }

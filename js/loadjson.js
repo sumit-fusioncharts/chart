@@ -5,8 +5,8 @@ window.onload=function(){
   xmlhttp.onreadystatechange = function(){   
     if ( xmlhttp.readyState === 4 && xmlhttp.status === 200 ) {
       mychart = new ParseData(JSON.parse(xmlhttp.responseText));
-      //chart = new Engine(mychart);
-      //chart.render();
+      chart = new Engine(mychart);
+      chart.render();
     }
   };
   xmlhttp.open('GET','json/crosstab.json',true);

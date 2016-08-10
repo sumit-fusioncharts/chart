@@ -26,9 +26,9 @@ Canvas.prototype.createText = function(svg,x,y,textVal,textColor,fontSize,pos,te
         return newText;
 };
 //creating group element
-Canvas.prototype.group = function(svg){
+Canvas.prototype.group = function(svg,id){
     var g = document.createElementNS(this.url, "g");
-        g.setAttribute('id', 'group');
+        g.setAttribute('id', id);
         g.setAttribute('shape-rendering', 'inherit');
         g.setAttribute('pointer-events', 'all');
         svg.appendChild(g);

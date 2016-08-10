@@ -1,4 +1,16 @@
 //globalFunctions.js
+"use strict";
+//setting up some window functions
+    var scrX = 0,
+        scrY = 0,
+        bool = true;
+    window.onscroll = function (e) {
+       scrY=window.scrollY;
+       scrX=window.scrollX;
+    };
+    window.onresize = function() {
+       location.reload(); 
+    };
 //Helper functions for older browsers 
     if (!Object.hasOwnProperty('create')) {
         Object.create = function (parentObj) {
@@ -13,4 +25,19 @@
                 Object.defineProperty(obj, prop, props[prop]);
             }
         };
+    }
+    function lookup(_val,_arr){
+        var len = _arr.length,
+            bool = false;
+        if(len<1){
+          bool = false;
+        }else{
+          while(len--){
+            if(_arr[len]==_val){
+              bool = true;
+              break;
+            }
+          }
+        }
+        return bool;
     }
