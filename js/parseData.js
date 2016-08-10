@@ -15,7 +15,13 @@ ParseData.prototype._decideParsingMethod = function(jsonObject){
 	}
 };
 ParseData.prototype._parseCrossTab = function(){
-	
+	var chartObj = jsonObject,
+		chartData = chartObj && chartObj.chartData,
+		model = {};
+		i = 0,
+		zones,
+		
+
 };
 ParseData.prototype._commonParsing = function(){
 
