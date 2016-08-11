@@ -1,2 +1,0 @@
-//xaxis.js
-//function Xaxis()
