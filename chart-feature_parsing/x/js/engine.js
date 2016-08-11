@@ -42,16 +42,14 @@ Engine.prototype.render = function(){
 			}
 
 			svgW = scrWidth;
-			svgH = 700;
-			chartH = svgH -100;
-			pps = chartH/lenData;        //pixel per scale
-			//pps = (pps<4) ? 4 : pps;     //resetting pps to set bounds
-			barS = 2;//(pps *25)/100; 		 //spaces between two bars
-			barH = pps- 2*barS;//(pps - 2*barS); 		 //height of each bar
+			svgH = scrHeight;
+			pps = scrHeight/lenData;     //pixel per scale
+			pps = (pps<4) ? 4 : pps;     //resetting pps to set bounds
+			barS = (pps *25)/100; 		 //spaces between two bars
+			barH = (pps - 2*barS) 		 //height of each bar
 			barMaxW = scrWidth/lenZones; //width of each Chart
-			console.log(lenData,pps,barH,barS);
-			jsondata.svg = {svgW,svgH,chartH,barS,barH,barMaxW}; //add svg information to json
-			model.maxvalues = maxArr;
+
+			jsondata.svg = {svgW,svgH,barS,barH,barMaxW}; //add svg information to json
 
 			crosstab = new Crosstab(jsondata);
 			crosstab.draw();
@@ -95,3 +93,27 @@ Engine.prototype.beautifyMax = function(_num){
 	    val = Math.ceil(val / temp) * temp;
 	    return val;
 };
+/*Engine.prototype = {
+	beautifyMax : function(_num){
+		var temp = 1,
+			val = _num;
+	    length =Math.log(val) * Math.LOG10E + 1 | 0;
+	    length -= 2;
+	    while(length--){
+	     temp = temp*10;
+	    }
+	    val = Math.ceil(val / temp) * temp;
+	    return val;
+	}
+};
+Engine.prototype = {
+	crosstab  : function(){
+
+	},
+	line : function(){
+
+	},
+	column : function(){
+
+	}
+};*/

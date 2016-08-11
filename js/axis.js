@@ -47,6 +47,7 @@ Axis.prototype.drawLabels = function(_width,_textArr,_x,_y,_id,_posTexts,_pos,_r
 		pos,
 		textVal,
 		i;
+
 	if(Array.isArray(_textArr)==true && _width>0){//work with text array
 		lenArr = _textArr.length;
 		space = _width/lenArr;
@@ -54,23 +55,99 @@ Axis.prototype.drawLabels = function(_width,_textArr,_x,_y,_id,_posTexts,_pos,_r
 			for(i =0; i< lenArr; i++){
 				textVal = _textArr[i];
 				pos = space * i + space * _pos;
-				this.canvas.createText(svg,pos,_y,textVal,textColor,fontSize,_posTexts,id);
+				canvas.createText(svg,pos,_y,textVal,textColor,fontSize,_posTexts,id);
 			}
 		}else{//top to bottom
 			for(i =0; i< lenArr; i++){
 				textVal = _textArr[i];
 				pos = space * i + space * _pos;
-				this.canvas.createText(svg,_x,pos,textVal,textColor,fontSize,_posTexts,id);
+				canvas.createText(svg,_x,pos,textVal,textColor,fontSize,_posTexts,id);
 			}
 		}
 		
 	}else{//work for single text
-		this.canvas.createText(svg,_x,_y,_textArr,textColor,fontSize,_posTexts,id);
+		canvas.createText(svg,_x,_y,_textArr,textColor,fontSize,_posTexts,id);
 	}
 };
-Axis.prototype.lines = function(){
-	this.canvas.createLines();
+Axis.prototype.drawLines = function(_width,_height,_numTicks,_x,_y,_isVertical,_id,_posTicks){
+	if(_numTicks<1){
+		return;
+	}
+	var axis = this,
+		svg = axis && axis.element,
+		canvas = axis && axis.canvas,
+		i,
+		space = _width/_numTicks,
+		posTicks = space*_posTicks,
+		tmpSpace,
+		lineId = _id,
+		classname = _id+"Class",
+		tickPos1,
+		element;
+	if(_numTicks==1){
+		if(_isVertical){
+				canvas.createLines(svg,_x,_y,(_x+_height),_y,classname,lineId);
+			}
+		else{
+				element = canvas.createLines(svg,_x,_y,_x+_width,_y,classname,lineId);
+				element.style.stroke = "#000";
+			}
+	}else{
+		if(_isVertical){
+			tickPos1 = _y;
+			for(i = 0; i<_numTicks+1; i++){//y fixed x changes
+				tickPos1 = _y; 
+				tmpSpace = space * i + posTicks;
+				canvas.createLines(svg,tmpSpace,tickPos1,tickPos1,tmpSpace,classname,lineId);
+			}
+		}else{
+			for(i = 0; i<_numTicks+1; i++){//x fixed y changes
+				tickPos1 = _height;
+				tmpSpace = _y+space*i+posTicks;
+				element = canvas.createLines(svg,_x,tmpSpace,tickPos1,tmpSpace,classname,lineId);
+				element.style.stroke = "#000";
+			}
+		}
+	}
+		
 };
-Axis.prototype.boxes = function(){
-	this.canvas.createrect();
-};
+Axis.prototype.drawCrossTabLines = function(_width,_height,_numTicks,_x,_y,_isVertical,_id,_posTicks,extra){
+	if(_numTicks<1){
+		return;
+	}
+	if(typeof extra != "number"){
+		extra = 0 ;
+	}
+	var axis = this,
+		svg = axis && axis.element,
+		canvas = axis && axis.canvas,
+		i = extra,
+		
+		tmpSpace,
+		lineId = _id,
+		classname = _id+"Class",
+		tickPos1,
+		element;
+
+	if(_isVertical){
+		space = _height/_numTicks,
+		posTicks = space*_posTicks,
+		tickPos1 = _height;
+
+		for(i; i<_numTicks+1; i++){//y fixed x changes
+			tmpSpace = _x + space * i + posTicks;
+			element = canvas.createLines(svg,tmpSpace,_y,tmpSpace,tickPos1,classname,lineId);
+			element.style.stroke = "#000";
+		}
+	}else{
+		space = _width/_numTicks,
+		posTicks = space*_posTicks,
+		tickPos1 = _height;
+
+		for(i; i<_numTicks+1; i++){//x fixed y changes
+			tmpSpace = _y+space*i+posTicks;
+			element = canvas.createLines(svg,_x,tmpSpace,tickPos1,tmpSpace,classname,lineId);
+			element.style.stroke = "#000";
+		}
+	}
+}

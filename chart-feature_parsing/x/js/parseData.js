@@ -53,4 +53,3 @@ ParseData.prototype._parseCrossTab = function(jsonObject){
 ParseData.prototype._commonParsing = function(){
 
 };
-
