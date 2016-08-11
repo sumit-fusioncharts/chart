@@ -23,6 +23,7 @@ Crosstab.prototype.draw = function(){
 		i,
 		j,
 		xaxis,
+<<<<<<< HEAD
 		yaxis,
 		chartW = svgW,
 		chartH = svgDetails.chartH,
@@ -42,10 +43,21 @@ Crosstab.prototype.draw = function(){
 			
 
 			this.dataSeries(yaxis,canvas,currentSvg);
+=======
+		yaxis;
+		currentSvg = crosstab.init(svgW,svgH,canvas,divId);
+		//this.header(canvas,currentSvg,true);
+		var axis = new Axis(canvas,currentSvg);
+		axis.drawTicks(20,svgW,lenZones,0,40,true,"verticalTicks",1);
+		axis.drawTicks(20,svgH,lenProducts,30,40,false,"verticalTicks",1);console.log(model);
+		axis.drawLabels(svgW,zones,0,30,"headerText","middle",0.5,true);
+		axis.drawLines(svgW,lenProducts,40,40,false,"xlines",1);
+>>>>>>> 2aeb8cfbf6b98e134a6a255649f22258e08a86a9
 
 };
 Crosstab.prototype.init = function(_w,_h,_canvas,_divId){
 	return _canvas.createSvg(_w,_h,"outerSvg","outerSvgClass",_divId);
+<<<<<<< HEAD
 };
 
 Crosstab.prototype.dataSeries = function(_axisCon,_canvas,_currentSvg){
@@ -152,3 +164,6 @@ Crosstab.prototype.dataSeries = function(_axisCon,_canvas,_currentSvg){
 						// sos = data.sos;//_width,_textArr,_x,_y,_id,_posTexts,_pos,_rightToLeft
 						// _axisCon.drawLabels(0,sub_product,subPSpace,temp,"sub_product","middle",0.5,false);
 */
+=======
+};
+>>>>>>> 2aeb8cfbf6b98e134a6a255649f22258e08a86a9
