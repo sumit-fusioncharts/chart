@@ -1,5 +1,5 @@
 {
-    "chartinfo":{
+    "chart":{
         "caption":"Website Visitors",
         "subCaption" : "Weekly Report",
         "xaxisname":"Dates",
@@ -9,10 +9,24 @@
         "chartType":"line",
         "divId":"chart",
         "chartsPositioning":"maxtomin"
-    },"data":[
-        {
-            "time":"",
-            ""
-        },
-    ]
+    },"timestamp": 
+    {
+        "time":  "Jan 01|Jan 02|Jan 03|Jan 04|Jan 05|Jan 06|Jan 07"
+    },"dataset":
+    [{ 
+        "title":"Items Sold",
+        "data":"||1||1|-13|85"
+    },{
+        "title":"Visitors",
+        "data":"81||37||122|53|60"
+    },{
+        "title":"Man Power",
+        "data":"10|21|23|9||122|178"
+    },{
+        "title":"Finance",
+        "data":"192432|213774|234243|324349|324545|185622|544345"
+    },{
+        "title":"Budget",
+        "data":"2432|2774|2437|2349|2545|2622|2345"
+    }]       
 }

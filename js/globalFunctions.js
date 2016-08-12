@@ -41,3 +41,12 @@
         }
         return bool;
     }
+    var max2min = function(a,b){
+      return b-a;
+    },
+    min2max = function(a,b){
+      return a-b;
+    },
+    sum = function(a,b){
+      return a+b;
+    };
