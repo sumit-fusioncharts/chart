@@ -6,3 +6,12 @@
 	stroke: : #000;
 	fill:none;
 }
+.headerTicksClass,.footerLineClass{
+	stroke: #000;
+}
+.horizontalLinesClass,.verticalLinesClass{
+	stroke: #000000;
+}
+.crosstabRectClass{
+	fill:blue;
+}

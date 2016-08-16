@@ -69,7 +69,24 @@ Axis.prototype.drawLabels = function(_width,_textArr,_x,_y,_id,_posTexts,_pos,_r
 		canvas.createText(svg,_x,_y,_textArr,textColor,fontSize,_posTexts,id);
 	}
 };
-Axis.prototype.drawLines = function(_width,_height,_numTicks,_x,_y,_isVertical,_id,_posTicks){
+Axis.prototype.drawMultipleLines = function(width,_height,top,left,numOfLines,_id,_posTicks){
+	if(numOfLines<1){
+		return;
+	}
+	var axis = this,
+		svg = axis && axis.element,
+		canvas = axis && axis.canvas,
+		space = _height/numOfLines,
+		extraSpace = _posTicks*space,
+		id = _id,
+		classname = _id+"Class",
+		i;
+		for(i = 0;i < numOfLines; i++){
+			left += space+extraSpace;
+			canvas.createLines(svg,left,top,left,(top+_height),classname,id);
+		} 
+};
+Axis.prototype.drawLines = function(_width,_numTicks,_x,_y,_isVertical,_id,_posTicks){
 	if(_numTicks<1){
 		return;
 	}
@@ -86,7 +103,7 @@ Axis.prototype.drawLines = function(_width,_height,_numTicks,_x,_y,_isVertical,_
 		element;
 	if(_numTicks==1){
 		if(_isVertical){
-				canvas.createLines(svg,_x,_y,(_x+_height),_y,classname,lineId);
+				canvas.createLines(svg,_x,_y,(_x+_width),_y,classname,lineId);
 			}
 		else{
 				element = canvas.createLines(svg,_x,_y,_x+_width,_y,classname,lineId);
@@ -94,13 +111,12 @@ Axis.prototype.drawLines = function(_width,_height,_numTicks,_x,_y,_isVertical,_
 			}
 	}else{
 		if(_isVertical){
-			tickPos1 = _y;
 			for(i = 0; i<_numTicks+1; i++){//y fixed x changes
 				tickPos1 = _y; 
 				tmpSpace = space * i + posTicks;
 				canvas.createLines(svg,tmpSpace,tickPos1,tickPos1,tmpSpace,classname,lineId);
 			}
-		}else{
+		}else{console.log("in");
 			for(i = 0; i<_numTicks+1; i++){//x fixed y changes
 				tickPos1 = _height;
 				tmpSpace = _y+space*i+posTicks;

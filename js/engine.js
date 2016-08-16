@@ -2,18 +2,27 @@
 function Engine(_object){
 	if(_object==false){
 		//unable to parse show error
-
 	}
-	this.model = _object;
-	console.log(this.model);
+	this.obj = _object;
 }
 Engine.prototype.render = function(renderType){
 	var engine = this,
-		model = engine && engine.model,
-		info = model && model.chart,
+		obj = engine && engine.obj,
+        model = obj && obj.model,
+        zones = model.zones,
+        maxpz = model && model.maxperzone,
+		info = obj && obj.chart,
 		chartType = info && info.chartType, //throw error if undefined
-		chartData = model && model.data,
-		i,maxMinAvg,temp,
+		chartData = obj && obj.data,
+		index,
+        maxMinAvg,
+        temp,
+        canvas,
+        svgHeight,
+        svgWidth,
+        chartHeight,
+        chartWidth,
+        i,
 		j;
 		//maxMinAvg = chartData.maxMinAvg;  // iteration required
 
@@ -22,16 +31,37 @@ Engine.prototype.render = function(renderType){
 	}
 
 	if(renderType == "crosstab"){
+        
+        //set crostab width,height
+        var barHeight = 30,
+            barSpace = 5,
+            height = 0,
+            axis = model && model.axis;
+
+        chartWidth = (typeof info.width === "undefined") ? 200 : info.width;
+        svgWidth = chartWidth * zones.length;
+        
+        for(i in model.axis){
+            height += model.axis[i].length * (2*barSpace+barHeight);
+        }
+        chartHeight = height;
+        svgHeight = height+100;
+        obj.svgDetails = {svgHeight:svgHeight,svgWidth:svgWidth,chartWidth:chartWidth,chartHeight:chartHeight,
+            barHeight:barHeight,barSpace:barSpace};
+
+        crosstab = new Crosstab(obj);
+        crosstab.draw();
 
 	}else if(renderType == "line" || renderType == "column"){
-		for(i in chartData){
-			//beautify max min
-			maxMinAvg = chartData[i].maxMinAvg;
-			temp = engine.beautify(maxMinAvg[0],maxMinAvg[1]);
-			chartData[i].newMaxMin = temp;
-		}
+    	for(i in chartData){
+            //beautify max min
+            maxMinAvg = chartData[i].maxMinAvg;
+            temp = engine.beautify(maxMinAvg[0],maxMinAvg[1]);
+            chartData[i].newMaxMin = temp;
+        }
 	}
 };
+
 Engine.prototype.getMax = function(_searchDirectry,_condition){
 	var temp = 0,
 		i,
@@ -55,6 +85,7 @@ Engine.prototype.getMax = function(_searchDirectry,_condition){
 	}
 	return temp;
 };
+
 Engine.prototype.beautifyMax = function(_num){
 		var temp = 1,
 			val = _num;
@@ -66,6 +97,7 @@ Engine.prototype.beautifyMax = function(_num){
 	    val = Math.ceil(val / temp) * temp;
 	    return val;
 };
+
 Engine.prototype.countzeros = function(val){
         var cnt=0,len;
         for(var i=0;i<val.length;i++){
@@ -175,7 +207,8 @@ Engine.prototype.beautify = function(max,min){
                         }
                     }
                 }else{
-                    newmin = min.toString();//normal 200-down,234-down,(200,neg=up)
+                    newmin = min.toString();
+                    //normal 200-down,234-down,(200,neg=up)
                     if(negMin==true){
                         newmin = "-"+this.genUp(newmin);
                     }else{

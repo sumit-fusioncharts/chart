@@ -1,13 +1,14 @@
 //crosstab.js
 function Crosstab(_jsonData){
 	this.jsonData = _jsonData;
+	console.log(this.jsonData);
 }
 Crosstab.prototype.draw = function(){
 	//init will draw the outer svg
 	var crosstab = this,
 		jsonData = crosstab && crosstab.jsonData,
 		data = jsonData && jsonData.data,
-		svgDetails = jsonData && jsonData.svg,
+		svgDetails = jsonData && jsonData.svgDetails,
 		model = jsonData && jsonData.model,
 		zones = model && model.zones,
 		productType = model && model.products,
@@ -15,140 +16,146 @@ Crosstab.prototype.draw = function(){
 		lenProducts = productType.length,
 		info = jsonData && jsonData.chart,
 		chartDiv = info && info.chartDiv,
-		divId = document.getElementById(chartDiv),
-		svgW = svgDetails && svgDetails.svgW,
-		svgH = svgDetails && svgDetails.svgH,
-		top = 40,
-		canvas = new Canvas(),
-		i,
-		j,
-		xaxis,
-		yaxis,
-		chartW = svgW,
-		chartH = svgDetails.chartH,
-		chartHeaderHeight = 40,
-		drawingObj = [];
+		svgAppend = document.getElementById(chartDiv),
+		svgW = svgDetails && svgDetails.svgWidth,
+		svgH = svgDetails && svgDetails.svgHeight,
+		svg,
+		canvas,
+		svgId = "svg",
+		svgClass = svgId+"Class",
+		isHorizontal = true;
 
-			currentSvg = crosstab.init(svgW,svgH,canvas,divId);
+		canvas = new Canvas();
+		svg = canvas.createSvg(svgW,svgH,svgId,svgClass,svgAppend);
 
-			xaxis = new Xaxis(canvas,currentSvg);
-			yaxis = new Yaxis(canvas,currentSvg);
-
-			xaxis.drawTicks(20,svgW,lenZones,0,40,true,"verticalTicks",1);
-			xaxis.drawLabels(svgW,zones,0,30,"headerText","middle",0.5,true);
-			xaxis.drawCrossTabLines(svgH,svgW,lenZones,0,chartHeaderHeight,true,"xlines",0,2);
-
-			
-			
-
-			this.dataSeries(yaxis,canvas,currentSvg);
+		xaxis = new Xaxis(canvas,svg);
+		yaxis = new Yaxis(canvas,svg);
+		
+		crosstab.drawHeader(zones,xaxis,isHorizontal);
+		crosstab.drawFooter(xaxis,isHorizontal);
+		crosstab.drawBody(xaxis,yaxis);
 
 };
-Crosstab.prototype.init = function(_w,_h,_canvas,_divId){
-	return _canvas.createSvg(_w,_h,"outerSvg","outerSvgClass",_divId);
-};
-
-Crosstab.prototype.dataSeries = function(_axisCon,_canvas,_currentSvg){
+Crosstab.prototype.drawHeader = function(_arr,_axis,_isHorizontal){
 	var crosstab = this,
-		canvas = _canvas,
-		currentSvg = _currentSvg,
 		jsonData = crosstab && crosstab.jsonData,
-		data = jsonData && jsonData.data,
-		svgDetails = jsonData && jsonData.svg,
-		model = jsonData && jsonData.model,
-		zones = model && model.zones,
-		productType = model && model.products,
-		lenZones = zones.length,
-		lenProducts = productType.length,
-		svgH = svgDetails && svgDetails.svgH,
-		svgW = svgDetails && svgDetails.svgW,
-		chartH = svgDetails.chartH,
-		subPSpace = svgH/lenProducts,
-		sunZoneSpace = svgW/lenZones,
-		barS = svgDetails.barS,
-		barH = svgDetails.barH,
-		space = barS*2+barH,
-		i,
-		j,
-		k,
-		l,
-		top = 60,
-		temp,
-		tempArr,
-		sub_product_Arr = [],
-		plotBody = new PlotBody(canvas,currentSvg),
-		sub_product,
-		sos,
-		tempBool,
-		ratio,
-		cnt = 0,
-		barPos = top,
-		setSubProduct = function(){
-							for(i in productType){
-								tempArr = [];
-								
-								for(j = 2; j<lenZones; j++){	
-									for(k in data){
-										if(data[k].product == productType[i] && data[k].region == zones[j]){
-											if(!lookup(data[k].sub_product,tempArr)){
-												tempArr.push(data[k].sub_product);
-											}
-										}
-									}
-								}
-								barPos += (space*tempArr.length);
-								plotBody.drawLabels(0,productType[i],100,barPos-60,"productType","start",0.5,false);
-								plotBody.drawLines(svgW,0,1,10,barPos,false,"xlines",1);
-								sub_product_Arr.push(tempArr.sort());
-							}
-							return sub_product_Arr;
-						};
-		temp = setSubProduct();
-		
+		svgDetails = jsonData && jsonData.svgDetails,
+		_width = svgDetails.svgWidth,
+		_posTexts = "start",
+		_id = "headerText",
+		_idTicks = "headerTicks",
+		_top = 40,
+		_lenTick = 30,
+		_numTicks = _arr.length,
+		_verticalTicks = true;
 
-
-
-
-
-
-
-		// for(i in productType){
-		// 	plotBody.drawLabels(0,productType[i],100,barPos,"productType","start",0.5,false);
-		// 	for(k in sub_product_Arr[i]){
-		// 		tempBool = false;
-		// 		cnt++;
-		// 		for(j = 2; j<lenZones;j++){
-		// 			for(l in data){
-		// 				if(data[l].product == productType[i] && data[l].region == zones[j]
-		// 					 && data[l].sub_product==sub_product_Arr[i][k]){
-		// 					temp = sunZoneSpace * 1.5;
-		// 					barPos = 40 + cnt*24;
-		// 					//draw level
-		// 					if(!tempBool){//console.log(sub_product_Arr[i][k],data[l].sos);
-		// 						tempBool= true;
-		// 						console.log(sub_product_Arr[i][k],temp,currentSvg,barPos);
-		// 						plotBody.drawLabels(0,sub_product_Arr[i][k],temp,barPos,"sub_product","middle",0.5,true);
-		// 					}
-		// 					//plot each value in diff zones
-		// 					//calculate distance
-							
-							
-		// 				}
-		// 			}
-		// 		}
-		// 	}
-			
-		// 	//_width,_height,_numTicks,_x,_y,_isVertical,_id,_posTicks
-		// 	plotBody.drawLines(svgW,0,1,10,barPos,false,"xlines",1);
-		// }
-
-
-		
+	_axis.drawLabels(_width,_arr,0,_top/1.3,_id,_posTexts,0.25,_isHorizontal);
+	_axis.drawTicks(_lenTick,_width,_numTicks,0,_top,_verticalTicks,_idTicks,1);
+	_axis.drawLines(_width,1,0,_top,_isHorizontal,_idTicks,1);
 };
-/*
-						//temp = space*Number(k)+40;console.log(temp);	
-						//console.log(data[k].sub_product);
-						// sub_product = data[k].sub_product;
-						// sos = data.sos;//_width,_textArr,_x,_y,_id,_posTexts,_pos,_rightToLeft
-						// _axisCon.drawLabels(0,sub_product,subPSpace,temp,"sub_product","middle",0.5,false);
-*/
+Crosstab.prototype.drawFooter = function(_axis,_isHorizontal){
+	var crosstab = this,
+		jsonData = crosstab && crosstab.jsonData,
+		svgDetails = jsonData && jsonData.svgDetails,
+		_width = svgDetails.svgWidth,
+		_chartHeight = svgDetails.chartHeight,
+		_top = 40,
+		_x = _top+_chartHeight,
+		_id = "footerLine";
+		
+	//_axis.drawLines(_width,1,0,_chartHeight+top,_isHorizontal,_id,0);
+};
+Crosstab.prototype.drawBody = function(xaxis,yaxis){
+	var crosstab = this,
+		jsonData = crosstab && crosstab.jsonData,
+		svgDetails = jsonData && jsonData.svgDetails,
+		data = jsonData && jsonData.data,
+		info = jsonData && jsonData.chart,
+		model = jsonData && jsonData.model,
+		products = model && model.products,
+		zones = model && model.zones,
+		lenZones = zones.length,
+		lenProducts = products.length,
+		subProduct = model && model.axis,
+		_width = svgDetails.svgWidth,
+		barHeight = svgDetails && svgDetails.barHeight,
+		barSpace = svgDetails && svgDetails.barSpace,
+		chartWidth = svgDetails && svgDetails.chartWidth,
+		chartHeight = svgDetails && svgDetails.chartHeight,
+		lossColorMax = info.maxLossColor,
+		lossColorMin = info.minLossColor,
+		profitColorMax = info.maxProfitColor,
+		profitColorMin = info.minProfitColor,
+		i,j,k,dataarr1,dataarr2,currentPos = 0,maxValue,tempWidth,temp = 0,
+		ypos = 25,sop,sop,ratioColor,
+		space = barHeight +2*barSpace,
+		pos = chartWidth*0.25,
+		subProductPos = chartWidth + pos,
+		productsPos = pos;
+
+	yaxis.drawTicks(chartHeight+40,_width,lenZones,0,chartHeight+80,true,"verticalLines",1);
+	//draw lines as par subproducts numbers
+	xaxis.drawCrossTabLines(40,0,"horizontalLines",model,svgDetails);
+
+	for(i in products){
+		for(j in subProduct[i]){
+			ypos += space;
+			if(j==0){
+				yaxis.drawLabels(chartHeight,products[i],productsPos,ypos,"Product","start",1,false);
+			}		
+			yaxis.drawLabels(chartHeight,subProduct[i][j],subProductPos,ypos,"subProduct","start",1,false);
+		}
+	}
+	ypos =5;
+	for(i in products){
+		for(j =2;j<lenZones;j++){
+			temp = ypos;
+			pos = chartWidth*j+1;
+			
+			dataarr1 = data[currentPos].dataArr;
+			dataarr2 = data[currentPos].dataArr1;
+			maxValue = data[currentPos].newMaxMin[0];
+			//temp = ypos; 
+			for(k in dataarr1){
+				temp += space;
+				if(dataarr1[k] != null){
+					sop = dataarr2[k];
+					sos = dataarr1[k];
+					ratioColor = (Math.abs(sop)/sos);
+					if(sop<0){//loss
+						rectColor = crosstab.genColor(lossColorMax,lossColorMin,ratioColor);
+					}else{
+						rectColor = crosstab.genColor(profitColorMax,profitColorMin,ratioColor);
+					}
+					tempWidth = crosstab.plot(maxValue,dataarr1[k],chartWidth);
+					yaxis.drawBox(pos,temp,tempWidth,barHeight,"crosstabRect",false,rectColor);					
+				}
+			}
+			currentPos ++;
+		}
+		ypos = temp;
+	}
+};
+Crosstab.prototype.plot = function(max,sos,_width){
+	var plotRatio = (_width-60)/max;
+	return plotRatio*sos;
+};
+Crosstab.prototype.genColor = function(clr1,clr2,rto){
+
+	var color1 = clr1.substring(1,clr1.length);
+	var color2 = clr2.substring(1,clr2.length);
+
+	var ratio = rto;
+
+	var hex = function(x) {
+	    x = x.toString(16);
+	    return (x.length == 1) ? '0' + x : x;
+	};
+
+	var r = Math.ceil(parseInt(color1.substring(0,2), 16) * ratio + parseInt(color2.substring(0,2), 16) * (1-ratio));
+	var g = Math.ceil(parseInt(color1.substring(2,4), 16) * ratio + parseInt(color2.substring(2,4), 16) * (1-ratio));
+	var b = Math.ceil(parseInt(color1.substring(4,6), 16) * ratio + parseInt(color2.substring(4,6), 16) * (1-ratio));
+
+	var middle = hex(r) + hex(g) + hex(b);
+	return middle;
+}

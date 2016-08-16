@@ -66,7 +66,7 @@ Canvas.prototype.createPoly = function(svg,dataset){
     return shape;
 };
 //creating Rect element
-Canvas.prototype.createRect = function(svg,rectX,rectY,rectHeight,rectWidth,rectId,rectClass){
+Canvas.prototype.createRect = function(svg,rectX,rectY,rectHeight,rectWidth,rectId,rectClass,rectColor){
     var rect = document.createElementNS(this.url, "rect");
         rect.setAttributeNS(null, "x", rectX);
         rect.setAttributeNS(null, "y", rectY);
@@ -74,6 +74,9 @@ Canvas.prototype.createRect = function(svg,rectX,rectY,rectHeight,rectWidth,rect
         rect.setAttributeNS(null, "width", rectWidth+50);
         rect.setAttributeNS(null, "id",  rectId);
         rect.setAttributeNS(null, "class",  rectClass);
+        if(typeof rectColor != "undefined"){
+            rect.style.fill= rectColor;
+        }
         svg.appendChild(rect);
     return rect;
 };

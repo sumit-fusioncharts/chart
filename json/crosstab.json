@@ -5,10 +5,10 @@
       "tab_titles":"region",
       "product_name":"Product Type",
       "sub_product_name":"Product",
-      "maxProfitColor":"#006633",
-      "minProfitColor":"#ff6600",
-      "maxLossColor":"#B71C1C",
-      "minLossColor":"#E57373",
+      "maxProfitColor":"#000000",
+      "minProfitColor":"#cccccc",
+      "maxLossColor":"#FF0000",
+      "minLossColor":"#FFFFFF",
       "numberprefix":"$",
       "chartDiv":"chart"
    },
@@ -17,8 +17,8 @@
          "product":"Coffee",
          "sub_product":"Amaretto",
          "region":"Central",
-         "sop":0.5105,
-         "sos":0.14011
+         "sop":5105,
+         "sos":14011
       },
       {
          "product":"Coffee",

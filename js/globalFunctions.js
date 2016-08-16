@@ -41,6 +41,7 @@
         }
         return bool;
     }
+    
     var max2min = function(a,b){
       return b-a;
     },

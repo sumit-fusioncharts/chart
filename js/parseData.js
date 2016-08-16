@@ -16,18 +16,25 @@ ParseData.prototype._decideParsingMethod = function(jsonObject){
 	}
 };
 ParseData.prototype._parseCrossTab = function(jsonObject){
-	var chartObj = jsonObject,
+	var parseData = this,
+		chartObj = jsonObject,
 		chartData = chartObj && chartObj.data,
 		chartInfo = chartObj && chartObj.chart,
 		model = {},
+		parsedObj = {},
 		data = [],
+		plotData = [],
+		tempArr1 = [],
+		tempArr=[],
 		i,
 		j,
 		k,
-		tempVar,
-		tempArr,
+		l,
+		tempVar,	
 		subProductsArr,
-		plotData = [],
+		flag,
+		cnt = 0,
+		zonemax,
 
 		zones = (function(){
 					tempArr = [];
@@ -67,26 +74,71 @@ ParseData.prototype._parseCrossTab = function(jsonObject){
 								subProductsArr.push(tempArr);
 								tempArr = [];
 							}
+							return subProductsArr;
 						})();
-
+		//adding null to empty data
 		for(i in products){
-			for(j in zones){
-				for(k in chartData){
-					if(products[i] == chartData[k].product && zones[j] == chartData[k].region){
-						tempVar = chartData[k].sos; 
-						if(!lookup(tempVar,tempArr)){
-							tempArr.push(tempVar);
+			for(j in subProducts[i]){
+				for(k = 2; k< zones.length; k++){ 
+					flag = false;
+					for(l in chartData){
+						if(products[i] == chartData[l].product && subProducts[i][j] == chartData[l].sub_product && 
+							zones[k] == chartData[l].region){
+							flag = true;
+						}
+					}
+					if(flag == false){
+						chartData.push({product:products[i],sub_product:subProducts[i][j],region:zones[k],
+							sop:null,sos:null});
+					}
+				}
+			}
+		}
+
+		zonemax = [];
+		for(i =2; i<zones.length;i++){
+			flag = false;
+			for(j in chartData){
+				if(chartData[j].region == zones[i]){
+					if(flag == false){
+						flag = true;
+						tempVar = chartData[j].sos;
+					}else{
+						if(chartData[j].sos>tempVar){
+							tempVar = chartData[j].sos;
 						}
 					}
 				}
-				plotData.push(tempArr);
-				tempArr = [];
-			}		
+			}
+		zonemax.push(tempVar);
 		}
 
-	model = {zones : zones, products : products, subProductsArr : subProductsArr, plotData};
-	chartObj.model = model;
-	return chartObj;
+		//getting back plotdata
+		for(i in products){
+			for(k = 2; k< zones.length; k++){ 
+				for(j in subProducts[i]){				
+					for(l in chartData){
+						if(products[i] == chartData[l].product && subProducts[i][j] == chartData[l].sub_product &&
+						 zones[k] == chartData[l].region){
+							tempVar = chartData[l].sos;
+							tempArr.push(tempVar);
+							tempVar = chartData[l].sop;
+							tempArr1.push(tempVar);
+						}
+					}
+				}
+				plotData.push({dataArr:tempArr, index:cnt, maxMinAvg:parseData.generateMaxMinAvg(tempArr),
+					title:products[i]+"-"+zones[k], newMaxMin:[zonemax[k-2],0], dataArr1:tempArr1});
+		 		tempArr = [];
+		 		tempArr1 = [];
+		 		cnt++;
+			}
+		}
+
+	model = {zones : zones, products : products, axis : subProductsArr, maxperzone:zonemax};
+	parsedObj = {chart:chartInfo, data:plotData, model:model};
+
+	return parsedObj;
 };
 ParseData.prototype._commonParsing = function(jsonObject){
 	var parseData = this,
@@ -107,35 +159,55 @@ ParseData.prototype._commonParsing = function(jsonObject){
 		temp,
 		index,
 		i;
+
 		for(i in dataSet){
 			index = Number(i);
 			title = dataSet[i].title;
 			dataSetData = dataSet && dataSet[i].data;
 			dataArr = dataSetData.split(separator);
-			dataArr = reassignBlackData(dataArr);
-			maxMinAvg = generateMaxMinAvg(dataArr);
+			dataArr = parseData.reassignBlackData(dataArr);
+			maxMinAvg = parseData.generateMaxMinAvg(dataArr);
 			data.push({index,title,dataArr,maxMinAvg});
-		}
-
-		function reassignBlackData(_arr){
-			_arr =  _arr.map(function(num){
-				if(num == ""){ return 0;}
-				else{ return Number(num);}
-			});
-			return _arr;
-		}
-		function generateMaxMinAvg(_arr){
-			//sorting array max to min without changing original array
-			temp = _arr;
-			_arr = _arr.concat().sort(max2min);
-			avg = temp.reduce(sum, 0)/temp.length;
-			return [_arr[0],_arr[_arr.length-1],avg];
 		}
 
 		obj.chart = chartInfo;
 		obj.data = data;
-		obj.model = xaxis;
+		obj.model = {axis:xaxis};
 
 		return obj;
 };
+ParseData.prototype.reassignBlackData = function(_arr){
+	_arr =  _arr.map(function(num){
+		if(num == ""){ return null;}
+		else{ return Number(num);}
+	});
+	return _arr;
+}
 
+ParseData.prototype.generateMaxMinAvg = function(_arr){
+	// function for generating maximum,minimum
+	// and avarage of given numbers from an array
+  	var temp =[],i;
+  	for(i in _arr){
+  		if(_arr[i]!=null){
+    		temp.push(_arr[i]);
+    	}
+  	}
+    var avg,
+    sum = 0,
+    max = temp[0],
+    min = temp[0],
+    tempVal;
+  	for (i in temp) {
+    	tempVal = temp[i];
+      	if (tempVal > max) {
+        	max = tempVal;
+      	}
+      	if (tempVal < min) {
+        	min = tempVal;
+      	}
+      	sum += tempVal;
+    }
+  	avg = sum / temp.length;
+  	return [max, min, avg];
+}
