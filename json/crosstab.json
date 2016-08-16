@@ -303,13 +303,6 @@
       {
          "product":"Tea",
          "sub_product":"Green Tea",
-         "region":"South",
-         "sop":104,
-         "sos":27100
-      },
-      {
-         "product":"Tea",
-         "sub_product":"Green Tea",
          "region":"West",
          "sop":-7109,
          "sos":16063

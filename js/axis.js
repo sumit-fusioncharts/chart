@@ -35,13 +35,13 @@ Axis.prototype.drawTicks = function(_lenTick,_width,_numTicks,_x,_y,_isVertical,
 	}
 	
 };
-Axis.prototype.drawLabels = function(_width,_textArr,_x,_y,_id,_posTexts,_pos,_rightToLeft){
+Axis.prototype.drawLabels = function(_width,_textArr,_x,_y,_id,_posTexts,_pos,_rightToLeft,fontSize){
 	var axis = this,
 		svg = axis && axis.element,
 		canvas = axis && axis.canvas,
 		lenArr,
 		textColor = "#000",
-		fontSize = 17,
+		fontSize = (typeof fontSize === "undefined")? 17:fontSize,
 		id = _id+"Class",
 		space,
 		pos,
@@ -166,4 +166,43 @@ Axis.prototype.drawCrossTabLines = function(_width,_height,_numTicks,_x,_y,_isVe
 			element.style.stroke = "#000";
 		}
 	}
-}
+};
+Axis.prototype.calculateTicksNum = function(ub,lb){
+	var yaxisticks;
+   if((ub-lb)==ub){
+      yaxisticks = 4;
+   }else if((ub-lb)==0){
+      yaxisticks = 2;
+   }else{
+      if((ub/lb)<3){
+         yaxisticks = 4
+      }else if((ub/lb)<6){
+         yaxisticks = 5;
+      }else{
+         yaxisticks = 6;
+      }  
+   }
+   return yaxisticks;
+};
+Axis.prototype.sortedTitle = function(titleY){
+	
+    if(titleY % 1 != 0){
+        titleY = titleY.toFixed(2);
+    }
+    var titleY_0 = titleY.toString().split(".")[0];
+    if (titleY_0.substring(0, 1) == '-') {
+      titleY_0 = Number(titleY_0.substring(1));
+      if (titleY_0 > 999 && titleY_0 < 999999) {
+        titleY = "-"+(titleY_0 / 1000).toFixed(1) + "K";
+      } else if (titleY_0 > 999999) {
+        titleY = "-"+(titleY_0 / 1000000).toFixed(1) + "M";
+      }
+    } else {
+      if (titleY_0 > 999 && titleY_0 < 999999) {
+        titleY = (titleY_0 / 1000).toFixed(1) + "K";
+      } else if (titleY_0 > 999999) {
+        titleY = (titleY_0 / 1000000).toFixed(1) + "M";
+      }
+    }
+    return titleY;
+};

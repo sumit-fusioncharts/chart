@@ -34,3 +34,37 @@ Xaxis.prototype.drawCrossTabLines = function(top,left,_id,model,svgDetails){
 			canvas.createLines(svg,left,top,svgW,top,classname,id);
 		}
 };
+Xaxis.prototype.drawPlottedData = function(dataset,radius){
+	var axis = this,
+		svg = axis && axis.element,
+		canvas = axis && axis.canvas,
+		xy = dataset.split(" "),
+		xyCor,
+		i,
+   		xyCorlen = xy.length-1;
+
+	canvas.createPoly(svg,dataset);
+
+	for(i=0;i<xyCorlen;i++){
+	    xyCor = xy[i].split(',');
+	    canvas.createCirles(svg,xyCor[0],xyCor[1],radius);
+	} 
+	
+};
+Xaxis.prototype.drawColumnData = function(dataset,width){
+	var axis = this,
+		svg = axis && axis.element,
+		canvas = axis && axis.canvas,
+		xy = dataset.split(" "),
+		width = (typeof width === "undefined")? 10 : width,
+		xyCor,
+		i,
+		id = "bar",
+		rectClass = id+"Class",
+		xyCorlen = xy.length-1;
+        for(i=0;i<xyCorlen;i++){
+            xyCor = xy[i].split(',');
+            canvas.createRect(svg,xyCor[0],xyCor[1],xyCor[2],width,id,rectClass,"#0000ff");
+			//paintB.createRect(this.svgGraph,xyCor[0],xyCor[1],xyCor[2],this.divisionX-60,"columnRect","columnRectClass",xyCor[3],Number(xyCor[4]),this.chartWidth,this.ofsetx,this.ofsety);
+		}
+};

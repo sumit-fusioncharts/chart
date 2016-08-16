@@ -38,14 +38,14 @@ ParseData.prototype._parseCrossTab = function(jsonObject){
 
 		zones = (function(){
 					tempArr = [];
-					tempArr.push(chartInfo.product_name);
-					tempArr.push(chartInfo.sub_product_name);
 					for(i in chartData){
 						tempVar = chartData[i].region;
 						if(!lookup(tempVar,tempArr)){
 							tempArr.push(tempVar);
 						}
 					}
+					tempArr.sort();
+					tempArr.unshift(chartInfo.product_name,chartInfo.sub_product_name);
 					return tempArr;
 				})(),
 		products = (function(){
