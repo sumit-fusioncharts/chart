@@ -3,7 +3,7 @@
         "caption":"Website Visitors",
         "subCaption" : "Weekly Report",
         "xaxisname":"Dates",
-        "width":"300",
+        "width":"400",
         "height":"300",
         "dataseparator" : "|",
         "chartType":"line",

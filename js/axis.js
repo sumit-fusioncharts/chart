@@ -2,38 +2,39 @@ function Axis(_canvas,_element){
 	this.canvas  = _canvas;
 	this.element = _element;
 };
-Axis.prototype.drawTicks = function(_lenTick,_width,_numTicks,_x,_y,_isVertical,_id,_posTicks){
-	if(_numTicks<1){
-		return;
-	}
+Axis.prototype.drawTicks = function(_length,area,numOfTicks,x,y,isVertical,id,extra){
+	
 	var axis = this,
 		svg = axis && axis.element,
 		canvas = axis && axis.canvas,
-		i,
-		space = _width/_numTicks,
-		posTicks = space*_posTicks,
-		tmpSpace,
-		lineId = _id,
-		classname = _id+"Class",
+		className = id+"Class",
+		_length = (typeof _length === "undefined")? 5 : _length,
+		_extra = (typeof extra === "undefined")? 0 : extra,
+		startingPoint,
+		i,	
 		tickPos1,
-		tickPos2;
+		tickPos2,
+		plotPointX,
+		plotPointY,
+		division = area / numOfTicks;
 
-	if(_isVertical){
-		tickPos1 = _y-_lenTick;
-		tickPos2 = _y;
-		for(i = 0; i<_numTicks+1; i++){//y fixed x changes
-			tmpSpace = space*i+posTicks;
-			canvas.createLines(svg,tmpSpace,tickPos1,tmpSpace,tickPos2,classname,lineId);
+	if(isVertical){
+		startingPoint = x;
+		tickPos1 = y;
+		tickPos2 = y -_length;
+		for(i = 0;i <=numOfTicks+_extra;i++){
+			plotPointX = startingPoint + i*division ;
+			canvas.createLines(svg,plotPointX,tickPos1,plotPointX,tickPos2,className,id);
 		}
 	}else{
-		for(i = 0; i<_numTicks+1; i++){//x fixed y changes
-			tickPos1 = _x-_lenTick;
-			tickPos2 = _x;
-			tmpSpace = space*i+posTicks;
-			canvas.createLines(svg,tickPos1,tmpSpace,tickPos2,tmpSpace,classname,lineId);
-		}
+		startingPoint = y;
+		tickPos1 = x;
+		tickPos2 = x - _length;
+		for(i = 0;i <=numOfTicks+_extra;i++){
+			plotPointY = startingPoint + i*division ;
+			canvas.createLines(svg,tickPos1,plotPointY,tickPos2,plotPointY,className,id);
+		}		
 	}
-	
 };
 Axis.prototype.drawLabels = function(_width,_textArr,_x,_y,_id,_posTexts,_pos,_rightToLeft,fontSize){
 	var axis = this,
@@ -54,7 +55,7 @@ Axis.prototype.drawLabels = function(_width,_textArr,_x,_y,_id,_posTexts,_pos,_r
 		if(_rightToLeft){
 			for(i =0; i< lenArr; i++){
 				textVal = _textArr[i];
-				pos = space * i + space * _pos;
+				pos = space * i + space * _pos+_x;
 				canvas.createText(svg,pos,_y,textVal,textColor,fontSize,_posTexts,id);
 			}
 		}else{//top to bottom

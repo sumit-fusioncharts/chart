@@ -27,16 +27,37 @@ Column.prototype.draw = function(){
 			xaxis = new Xaxis(canvas,svg);
 			yaxis = new Yaxis(canvas,svg);
 			line.drawHeader(data[i],svgDetails,yaxis);
-			line.drawBody(data[i],svgDetails,xaxis,yaxis);
-			if(type == "crosstab"){
-				line.plotData(data[i],svgDetails,xaxis,axis);
-			}else{
-				line.plotData(data[i],svgDetails,xaxis,axis[i]);
-			}
 			
-			//line.drawFooter();
+			if(type == "crosstab"){
+				line.drawBody(data[i],svgDetails,xaxis,yaxis,axis[data[i].product]);
+				line.plotData(data[i],svgDetails,xaxis,axis[data[i].product]);
+				line.drawFooter(data[i],svgDetails,yaxis,xaxis,axis[data[i].product]);
+			}else{
+				line.drawBody(data[i],svgDetails,xaxis,yaxis,axis);
+				line.plotData(data[i],svgDetails,xaxis,axis[i]);
+				line.drawFooter(data[i],svgDetails,yaxis,xaxis,axis);
+			}	
 		}
 	};
+Column.prototype.drawFooter = function(data,svgDetails,yaxis,xaxis,axis){
+	var svgW = svgDetails && svgDetails.svgWidth,
+		svgH = svgDetails && svgDetails.svgHeight,
+		chartW = svgDetails && svgDetails.chartWidth,
+		chartH = svgDetails && svgDetails.chartHeight,
+		upperLimit = data.newMaxMin[0],
+		lowerLimit = data.newMaxMin[1],
+		numOfyaxisTicks = yaxis.calculateTicksNum(upperLimit,lowerLimit),
+		numOfData = axis.length,
+		divisiony = chartH / numOfyaxisTicks,//height per segment
+		divisionx = chartW / numOfData,//width per segment
+		marginx = svgDetails && svgDetails.marginx,
+		marginy = svgDetails && svgDetails.marginy,
+		_width = chartW - marginx,
+		_height = chartH - marginy;
+		
+		xaxis.drawTicks(5,_width,numOfData-1,marginx,chartH+5,true,"yaxisTicks",1);
+		xaxis.drawLabels(chartW,axis,marginx/2,chartH+20,"yaxisLabel","middle",1,true,14);
+}
 Column.prototype.drawHeader = function(data,svgDetails,yaxis){
 	var title = data.title,
 		svgW = svgDetails && svgDetails.svgWidth,
@@ -49,12 +70,13 @@ Column.prototype.drawHeader = function(data,svgDetails,yaxis){
 
 		yaxis.drawBox(marginx,5,_width,40,"titleBox",false);
 		yaxis.drawLabels(0,title,svgW/1.75,30,"titleText","middle",1,true,16);
+
 };
-Column.prototype.drawBody = function(data,svgDetails,xaxis,yaxis){
+Column.prototype.drawBody = function(data,svgDetails,xaxis,yaxis,axis,_type){
 	var upperLimit = data.newMaxMin[0],
 		lowerLimit = data.newMaxMin[1],
 		numOfyaxisTicks = yaxis.calculateTicksNum(upperLimit,lowerLimit),
-		numOfData = data.dataArr.length,
+		numOfData = axis.length,
 		svgW = svgDetails && svgDetails.svgWidth,
 		svgH = svgDetails && svgDetails.svgHeight,
 		chartW = svgDetails && svgDetails.chartWidth,
@@ -65,14 +87,19 @@ Column.prototype.drawBody = function(data,svgDetails,xaxis,yaxis){
 		marginy = svgDetails && svgDetails.marginy,
 		_width = chartW - marginx,
 		_height = chartH - marginy,
-		i,temp,yaxisLabel,tempArr = [],calculationY;
+		i,
+		temp,
+		yaxisLabel,
+		tempArr = [],
+		calculationY;
 
-		//draw container
+		//adjustment
+
 		yaxis.drawBox(marginx,marginy,_width,_height,"container",false);
-		//outer box for test purpose
-		//yaxis.drawBox(0,0,svgW,svgH,"container",false);
+
 		//draw y axis ticks
-		yaxis.drawTicks(5,_height,numOfyaxisTicks,marginx,marginy,false,"yaxisTicks",1);
+		yaxis.drawTicks(5,_height,numOfyaxisTicks,marginx,marginy,false,"yaxisTicks");
+		
 		//adding labels
 		for(i = 0;i <= numOfyaxisTicks; i++){
 			yaxisLabel = (upperLimit - (((upperLimit-lowerLimit)/numOfyaxisTicks)*i));
@@ -80,15 +107,10 @@ Column.prototype.drawBody = function(data,svgDetails,xaxis,yaxis){
         	tempArr.push(yaxisLabel);
 		}
 
-		temp = chartH/tempArr.length;
-		for(i = 0;i<tempArr.length;i++){
-			calculationY =(temp*i);
-    		if(i%2!=0 && i != numOfyaxisTicks){
-		        yaxis.drawBox(marginx,calculationY,_width,temp,"backgroundBox",false);                      
-		    }
-		}
-		//draw y axis labels			
-		yaxis.drawLabels(chartH,tempArr,marginx/2,marginy,"yaxisLabel","middle",1,false,14);
+		yaxis.drawInsideBox(marginx,marginy,_width,_height,numOfyaxisTicks,"backgroundBox",false);
+
+		yaxis.drawLabels(_height,tempArr,marginx-8,marginy,"yaxisLabel","end",0.06,false,14);
+		
 		//plot data	
 };
 Column.prototype.plotData = function(data,svgDetails,xaxis,axis){
@@ -110,21 +132,21 @@ Column.prototype.plotData = function(data,svgDetails,xaxis,axis){
 		xcord,
 		ycord,
 		barHight,
-		xaxisticks = axis.length,
-		plotRatio = (chartH-50)/(newmax-newmin);
-
-	for(var i=0;i<dataArrayLen;i++){            
+		xaxisticks = axis.length,//****
+		plotRatio = (chartH-marginx)/(newmax-newmin);
+		
+	for(var i=0;i<dataArrayLen;i++){
+		divisionx = divisionx;//(chartW-marginx) / (xaxisticks);  console.log(divisionX);          
 	    if(typeof dataArray[i]!="undefined" && dataArray[i] != null){
-	        y = Number(dataArray[i]);
-	        divisionX = (chartW-50) / (xaxisticks);	         
-	        xcord= (divisionX*i)+marginx;
+	        y = Number(dataArray[i]);	       	         
+	        xcord= (divisionx*i)+marginx;
 	        barHight = ((y-newmin)*plotRatio); 
-            ycord = (chartH -50 - barHight + marginx);
+            ycord = (chartH - barHight);
             if(barHight<1){
             	barHight=1;
             	ycord=ycord-1;
             }
-            datasetStr += (xcord)+","+ycord+","+(barHight)+","+y+" ";            	
+            datasetStr += (xcord+5)+","+ycord+","+(barHight)+","+y+" ";            	
 	    }
     }//successfully displaying Data String for plotting
     xaxis.drawColumnData(datasetStr,divisionx-60);

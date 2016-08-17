@@ -15,13 +15,14 @@
 }
 .crosstabRectClass{
 	fill:blue;
+
 }
 .containerClass{
-	stroke: #000;
+	stroke: rgba(0,0,0,0.4);
 	fill:transparent;
 }
 .backgroundBoxClass{
-	stroke: #000;
+	stroke: rgba(0,0,0,0.2);
 	fill:#F7F7F7;
 }
 .titleBoxClass{

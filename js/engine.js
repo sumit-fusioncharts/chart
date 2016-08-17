@@ -63,10 +63,10 @@ Engine.prototype.render = function(renderType){
             }        
         }
 
-        svgWidth = (typeof info.width === "undefined") ? 300 : info.width;
+        svgWidth = (typeof info.width === "undefined") ? 400 : info.width;
         marginx = 50;
         chartWidth = svgWidth - marginx;
-        svgHeight = (typeof info.height === "undefined") ? 300 : info.height;
+        svgHeight = (typeof info.height === "undefined") ? 400 : info.height;
         marginy = 50;
         chartHeight = svgHeight - marginy;
 

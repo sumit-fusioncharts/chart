@@ -128,7 +128,7 @@ ParseData.prototype._parseCrossTab = function(jsonObject){
 					}
 				}
 				plotData.push({dataArr:tempArr, index:cnt, maxMinAvg:parseData.generateMaxMinAvg(tempArr),
-					title:products[i]+"-"+zones[k], newMaxMin:[zonemax[k-2],0], dataArr1:tempArr1});
+					title:products[i]+"-"+zones[k], newMaxMin:[zonemax[k-2],0], dataArr1:tempArr1, product:Number(i)});
 		 		tempArr = [];
 		 		tempArr1 = [];
 		 		cnt++;
