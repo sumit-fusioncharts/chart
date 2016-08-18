@@ -51,7 +51,8 @@ var max2min = function(a, b) {
     },
     sum = function(a, b) {
         return a + b;
-    },
-    customEventHairLine = new CustomEvent("mouserollover", {
-        "detail": { x: ""}
-    });
+    };
+function OnAddEventListener(x,element) {
+    var customEventHairLine = new CustomEvent('mouseonelement', { detail: x });
+    element.dispatchEvent(customEventHairLine);
+}

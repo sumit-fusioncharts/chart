@@ -41,14 +41,21 @@ Xaxis.prototype.drawPlottedData = function(dataset,radius){
 		xy = dataset.split(" "),
 		xyCor,
 		i,
-   		xyCorlen = xy.length-1;
+   		xyCorlen = xy.length-1,
+   		circleArr = [],
+   		circleElement;
 
 	canvas.createPoly(svg,dataset);
 
 	for(i=0;i<xyCorlen;i++){
 	    xyCor = xy[i].split(',');
-	    canvas.createCirles(svg,xyCor[0],xyCor[1],radius);
+	    circleElement = canvas.createCirles(svg,xyCor[0],xyCor[1],radius);
+	    circleArr.push({
+	    	point:xyCor[0],
+	    	element:circleElement
+	    });
 	} 
+	return circleArr;
 	
 };
 Xaxis.prototype.drawColumnData = function(dataset,width){
@@ -65,6 +72,14 @@ Xaxis.prototype.drawColumnData = function(dataset,width){
         for(i=0;i<xyCorlen;i++){
             xyCor = xy[i].split(',');
             canvas.createRect(svg,xyCor[0],xyCor[1],xyCor[2],width,id,rectClass,"#0000ff");
-			//paintB.createRect(this.svgGraph,xyCor[0],xyCor[1],xyCor[2],this.divisionX-60,"columnRect","columnRectClass",xyCor[3],Number(xyCor[4]),this.chartWidth,this.ofsetx,this.ofsety);
-		}
+   		}
 };
+Xaxis.prototype.drawHairLine = function(x,y1,y2,id){
+	var axis = this,
+		svg = axis && axis.element,
+		canvas = axis && axis.canvas,
+		classname = id+"Class",
+		hairline = canvas.createLines(svg,x,y1,x,(y1+y2),classname,id);
+		hairline.setAttribute("visibility","hidden");
+		return hairline;
+}

@@ -1,6 +1,8 @@
 //line.js
 function Line(_jsonData) {
     this.jsonData = _jsonData;
+    this.lineArr = [];
+    this.plotPoints;
     console.log(this.jsonData);
 }
 Line.prototype.draw = function() {
@@ -57,7 +59,9 @@ Line.prototype.drawHeader = function(data, svgDetails, yaxis) {
 
 };
 Line.prototype.drawBody = function(data, svgDetails, xaxis, yaxis, axis) {
-    var upperLimit = data.newMaxMin[0],
+    var line = this,
+        lineArr = line.lineArr,
+        upperLimit = data.newMaxMin[0],
         lowerLimit = data.newMaxMin[1],
         numOfyaxisTicks = yaxis.calculateTicksNum(upperLimit, lowerLimit),
         numOfData = axis.length, //data.dataArr.length,
@@ -95,14 +99,17 @@ Line.prototype.drawBody = function(data, svgDetails, xaxis, yaxis, axis) {
     //draw y axis labels			
     yaxis.drawLabels(_height, tempArr, marginx - 8, marginy, "yaxisLabel", "end", 0.06, false, 14);
     xaxis.drawLabels(chartW, axis, marginx / 2, chartH + 20, "yaxisLabel", "middle", 1, true, 14);
+    temp = xaxis.drawHairLine(marginx,marginy,_height,"hairline");
+    lineArr.push(temp);
 
     //draw container
     box = yaxis.drawBox(marginx, marginy, _width, _height, "container", false);
-    line.drawHairLine(box);
+    line.eventHairLine(box,marginx);
 };
 
 Line.prototype.plotData = function(data, svgDetails, xaxis, axis) {
-    var newmax = data.newMaxMin[0],
+    var line = this,
+        newmax = data.newMaxMin[0],
         newmin = data.newMaxMin[1],
         datasetStr = "",
         dataValues = "",
@@ -116,6 +123,7 @@ Line.prototype.plotData = function(data, svgDetails, xaxis, axis) {
         dataArrayLen = data.dataArr.length,
         numOfData = data.dataArr.length,
         divisionx = chartW / numOfData,
+        plotPoints = line.plotPoints,
         y,
         xcord,
         ycord,
@@ -132,25 +140,47 @@ Line.prototype.plotData = function(data, svgDetails, xaxis, axis) {
             datasetStr += xcord + "," + ycord + " ";
         }
     } //successfully displaying Data String for plotting
-    xaxis.drawPlottedData(datasetStr, 5);
+    plotPoints = xaxis.drawPlottedData(datasetStr, 5);
 
 
 };
-Line.prototype.drawHairLine = function(box) {
+Line.prototype.eventHairLine = function(box,marginx) {
+    var line = this,
+        hairline = line.lineArr,
+        rectLeft = box.getBoundingClientRect().left;
+        box.addEventListener("mousemove", function(event) {
+            OnAddEventListener((event.pageX-rectLeft+marginx),box);
+        }, false);
+        //box.addEventListener("mouseonelement", line.moveCrosshair, false);
+        box.addEventListener("mouseout",function(){
+            line.hideCrossHair();
+        }, false);
+        box.addEventListener("mouseonelement", function(event){
+            line.moveCrosshair(event);
+        }, false);
 
-    var rectLeft = box.getBoundingClientRect().left;
-    // box.addEventListener("mousemove", function(event) {
-    //     customEventHairLine.detail = { x: event.pageX };
-    //     box.dispatchEvent(customEventHairLine);
-    // }, false);
-    var rollover = new CustomEvent("mouserollover",{
-      "detail":{x:event.pageX,y:event.clientY, left:rectLeft}
-    });
-    box.dispatchEvent(customEventHairLine);
-    box.addEventListener("mouserollover", moveCrosshair, false);
-    //box.addEventListener("mouseout", hideCrossHair, false);
+       
 };
 
-function moveCrosshair(e) {
-    console.log(e.detail.x);
-}
+Line.prototype.moveCrosshair = function(e) {
+ var line = this,
+    _hairline = line && line.lineArr,
+    _plotPoints = line && line.plotPoints;
+  for(i in _hairline){
+    _hairline[i].setAttribute("visibility","visible");
+    _hairline[i].setAttribute("x1",e.detail);
+    _hairline[i].setAttribute("x2",e.detail);
+  }
+  for(i in _plotPoints){
+
+  }
+};
+Line.prototype.hideCrossHair = function(){
+ var line = this,
+    _hairline = line && line.lineArr,
+    _plotPoints = line && line.plotPoints,
+    i;
+  for(i in _hairline){
+    _hairline[i].setAttribute("visibility","hidden");
+  } 
+};
