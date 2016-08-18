@@ -52,7 +52,7 @@ var max2min = function(a, b) {
     sum = function(a, b) {
         return a + b;
     };
-function OnAddEventListener(x,element) {
-    var customEventHairLine = new CustomEvent('mouseonelement', { detail: x });
+function OnAddEventListener(x,leftx,element) {
+    var customEventHairLine = new CustomEvent('mouseonelement', { detail:{x:x,top:leftx}});
     element.dispatchEvent(customEventHairLine);
 }

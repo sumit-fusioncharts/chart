@@ -1,6 +1,7 @@
 //xaxis.js
 function Xaxis(_canvas,_svg){
 	Axis.call(this,_canvas,_svg);
+	this.arr = [];
 }
 Xaxis.prototype = Object.create(Axis.prototype);
 Xaxis.prototype.constructor = Xaxis;
@@ -34,7 +35,7 @@ Xaxis.prototype.drawCrossTabLines = function(top,left,_id,model,svgDetails){
 			canvas.createLines(svg,left,top,svgW,top,classname,id);
 		}
 };
-Xaxis.prototype.drawPlottedData = function(dataset,radius){
+Xaxis.prototype.drawPlottedData = function(dataset,radius,arr){
 	var axis = this,
 		svg = axis && axis.element,
 		canvas = axis && axis.canvas,
@@ -42,7 +43,6 @@ Xaxis.prototype.drawPlottedData = function(dataset,radius){
 		xyCor,
 		i,
    		xyCorlen = xy.length-1,
-   		circleArr = [],
    		circleElement;
 
 	canvas.createPoly(svg,dataset);
@@ -50,29 +50,42 @@ Xaxis.prototype.drawPlottedData = function(dataset,radius){
 	for(i=0;i<xyCorlen;i++){
 	    xyCor = xy[i].split(',');
 	    circleElement = canvas.createCirles(svg,xyCor[0],xyCor[1],radius);
-	    circleArr.push({
+	    axis.arr.push({
 	    	point:xyCor[0],
-	    	element:circleElement
+	    	pointy:xyCor[1],
+	    	element:circleElement,
+	    	data:arr[i]
 	    });
 	} 
-	return circleArr;
+	return axis.arr;
 	
 };
-Xaxis.prototype.drawColumnData = function(dataset,width){
+Xaxis.prototype.drawColumnData = function(dataset,width,arr){
 	var axis = this,
 		svg = axis && axis.element,
 		canvas = axis && axis.canvas,
 		xy = dataset.split(" "),
 		width = (typeof width === "undefined")? 10 : width,
 		xyCor,
+		barElement,
 		i,
 		id = "bar",
 		rectClass = id+"Class",
 		xyCorlen = xy.length-1;
         for(i=0;i<xyCorlen;i++){
             xyCor = xy[i].split(',');
-            canvas.createRect(svg,xyCor[0],xyCor[1],xyCor[2],width,id,rectClass,"#0000ff");
+            barElement = canvas.createRect(svg,xyCor[0],xyCor[1],xyCor[2],width,id,rectClass,"#0000ff");
+           	axis.arr.push({
+		    	point:xyCor[0],
+		    	pointy:xyCor[1],
+		    	width:width,
+		    	pointx2:xyCor[3],
+		    	element:barElement,
+		    	data:arr[i]
+		    });
    		}
+
+   		return axis.arr;
 };
 Xaxis.prototype.drawHairLine = function(x,y1,y2,id){
 	var axis = this,

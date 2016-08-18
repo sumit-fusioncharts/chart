@@ -60,7 +60,9 @@ Engine.prototype.render = function(renderType){
                 maxMinAvg = chartData[i].maxMinAvg;
                 temp = engine.beautify(maxMinAvg[0],maxMinAvg[1]);
                 chartData[i].newMaxMin = temp;
-            }        
+            }  
+  
+    
         }
 
         svgWidth = (typeof info.width === "undefined") ? 400 : info.width;

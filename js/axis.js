@@ -36,6 +36,13 @@ Axis.prototype.drawTicks = function(_length,area,numOfTicks,x,y,isVertical,id,ex
 		}		
 	}
 };
+Axis.prototype.drawSingleText = function(x,y,text,id,pos,fontSize){
+	var axis = this,
+		svg = axis && axis.element,
+		canvas = axis && axis.canvas,
+		textobj = canvas.createText(svg,x,y,text,"#000",fontSize,pos,id);
+		return textobj;
+};
 Axis.prototype.drawLabels = function(_width,_textArr,_x,_y,_id,_posTexts,_pos,_rightToLeft,fontSize){
 	var axis = this,
 		svg = axis && axis.element,
