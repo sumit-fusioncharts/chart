@@ -1,0 +1,312 @@
+{
+   "chart":{
+      "chartType":"crosstab",
+      "xaxisTitles":"sos",
+      "tab_titles":"region",
+      "product_name":"Product Type",
+      "sub_product_name":"Product",
+      "maxProfitColor":"#000000",
+      "minProfitColor":"#cccccc",
+      "maxLossColor":"#FF0000",
+      "minLossColor":"#FFFFFF",
+      "numberprefix":"$",
+      "chartDiv":"chart"
+
+   },
+   "data":[
+      {
+         "product":"Coffee",
+         "sub_product":"Amaretto",
+         "region":"Central",
+         "sop":5105,
+         "sos":14011
+      },
+      {
+         "product":"Coffee",
+         "sub_product":"Amaretto",
+         "region":"East",
+         "sop":1009,
+         "sos":2993
+      },
+      {
+         "product":"Coffee",
+         "sub_product":"Amaretto",
+         "region":"West",
+         "sop":-1225,
+         "sos":9265
+      },
+      {
+         "product":"Coffee",
+         "sub_product":"Columbian",
+         "region":"Central",
+         "sop":8528,
+         "sos":28913
+      },
+      {
+         "product":"Coffee",
+         "sub_product":"Columbian",
+         "region":"East",
+         "sop":27253,
+         "sos":47386
+      },
+      {
+         "product":"Coffee",
+         "sub_product":"Columbian",
+         "region":"South",
+         "sop":8767,
+         "sos":21664
+      },
+      {
+         "product":"Coffee",
+         "sub_product":"Columbian",
+         "region":"West",
+         "sop":11253,
+         "sos":30357
+      },
+      {
+         "product":"Coffee",
+         "sub_product":"Decaf Irish Cream",
+         "region":"Central",
+         "sop":9632,
+         "sos":26155
+      },
+      {
+         "product":"Coffee",
+         "sub_product":"Decaf Irish Cream",
+         "region":"East",
+         "sop":2727,
+         "sos":6261
+      },
+      {
+         "product":"Coffee",
+         "sub_product":"Decaf Irish Cream",
+         "region":"South",
+         "sop":2933,
+         "sos":11592
+      },
+      {
+         "product":"Coffee",
+         "sub_product":"Decaf Irish Cream",
+         "region":"West",
+         "sop":-1305,
+         "sos":18235
+      },
+      {
+         "product":"Espresso",
+         "sub_product":"Caffe Latte",
+         "region":"South",
+         "sop":3872,
+         "sos":15442
+      },
+      {
+         "product":"Espresso",
+         "sub_product":"Caffe Latte",
+         "region":"West",
+         "sop":7502,
+         "sos":20458
+      },
+      {
+         "product":"Espresso",
+         "sub_product":"Caffe Mocha",
+         "region":"Central",
+         "sop":14640,
+         "sos":36570
+      },
+      {
+         "product":"Espresso",
+         "sub_product":"Caffe Mocha",
+         "region":"East",
+         "sop":-6230,
+         "sos":16646
+      },
+      {
+         "product":"Espresso",
+         "sub_product":"Caffe Mocha",
+         "region":"South",
+         "sop":5201,
+         "sos":14163
+      },
+      {
+         "product":"Espresso",
+         "sub_product":"Caffe Mocha",
+         "region":"West",
+         "sop":4064,
+         "sos":18876
+      },
+      {
+         "product":"Espresso",
+         "sub_product":"Decaf Espresso",
+         "region":"Central",
+         "sop":8860,
+         "sos":24485
+      },
+      {
+         "product":"Espresso",
+         "sub_product":"Decaf Espresso",
+         "region":"East",
+         "sop":2410,
+         "sos":7722
+      },
+      {
+         "product":"Espresso",
+         "sub_product":"Decaf Espresso",
+         "region":"South",
+         "sop":5930,
+         "sos":15384
+      },
+      {
+         "product":"Espresso",
+         "sub_product":"Decaf Espresso",
+         "region":"West",
+         "sop":12302,
+         "sos":30578
+      },
+      {
+         "product":"Espresso",
+         "sub_product":"Regular Espresso",
+         "region":"East",
+         "sop":10062,
+         "sos":24036
+      },
+      {
+         "product":"Herbal Tea",
+         "sub_product":"Chamomile",
+         "region":"Central",
+         "sop":14434,
+         "sos":36570
+      },
+      {
+         "product":"Herbal Tea",
+         "sub_product":"Chamomile",
+         "region":"East",
+         "sop":765,
+         "sos":2194
+      },
+      {
+         "product":"Herbal Tea",
+         "sub_product":"Chamomile",
+         "region":"South",
+         "sop":3180,
+         "sos":11186
+      },
+      {
+         "product":"Herbal Tea",
+         "sub_product":"Chamomile",
+         "region":"West",
+         "sop":8852,
+         "sos":25632
+      },
+      {
+         "product":"Herbal Tea",
+         "sub_product":"Lemon",
+         "region":"Central",
+         "sop":6251,
+         "sos":21978
+      },
+      {
+         "product":"Herbal Tea",
+         "sub_product":"Lemon",
+         "region":"East",
+         "sop":7901,
+         "sos":27176
+      },
+      {
+         "product":"Herbal Tea",
+         "sub_product":"Lemon",
+         "region":"South",
+         "sop":2593,
+         "sos":14497
+      },
+      {
+         "product":"Herbal Tea",
+         "sub_product":"Lemon",
+         "region":"West",
+         "sop":13120,
+         "sos":32274
+      },
+      {
+         "product":"Herbal Tea",
+         "sub_product":"Mint",
+         "region":"Central",
+         "sop":4069,
+         "sos":9337
+      },
+      {
+         "product":"Herbal Tea",
+         "sub_product":"Mint",
+         "region":"East",
+         "sop":-2242,
+         "sos":11992
+      },
+      {
+         "product":"Herbal Tea",
+         "sub_product":"Mint",
+         "region":"West",
+         "sop":4330,
+         "sos":14380
+      },
+      {
+         "product":"Tea",
+         "sub_product":"Darjeeling",
+         "region":"Central",
+         "sop":10772,
+         "sos":30289
+      },
+      {
+         "product":"Tea",
+         "sub_product":"Darjeeling",
+         "region":"East",
+         "sop":6497,
+         "sos":14096
+      },
+      {
+         "product":"Tea",
+         "sub_product":"Darjeeling",
+         "region":"West",
+         "sop":11780,
+         "sos":28769
+      },
+      {
+         "product":"Tea",
+         "sub_product":"Earl Grey",
+         "region":"Central",
+         "sop":10331,
+         "sos":32881
+      },
+      {
+         "product":"Tea",
+         "sub_product":"Earl Grey",
+         "region":"East",
+         "sop":6497,
+         "sos":14096
+      },
+      {
+         "product":"Tea",
+         "sub_product":"Earl Grey",
+         "region":"West",
+         "sop":10425,
+         "sos":27387
+      },
+      {
+         "product":"Tea",
+         "sub_product":"Green Tea",
+         "region":"Central",
+         "sop":1227,
+         "sos":5211
+      },
+      {
+         "product":"Tea",
+         "sub_product":"Green Tea",
+         "region":"East",
+         "sop":5654,
+         "sos":11571
+      },
+      {
+         "product":"Tea",
+         "sub_product":"Green Tea",
+         "region":"West",
+         "sop":-7109,
+         "sos":16063
+      }
+   ]
+}
