@@ -65,6 +65,13 @@ Canvas.prototype.createPoly = function(svg,dataset){
         svg.appendChild(shape); 
     return shape;
 };
+Canvas.prototype.createPath = function(svg,dataset){
+    var shape = document.createElementNS(this.url, "path");
+        shape.setAttributeNS(null, "d", dataset);
+        shape.setAttributeNS(null, "class",  "svgPath");
+        svg.appendChild(shape); 
+    return shape;
+};
 //creating Rect element
 Canvas.prototype.createRect = function(svg,rectX,rectY,rectHeight,rectWidth,rectId,rectClass,rectColor){
     var rect = document.createElementNS(this.url, "rect");

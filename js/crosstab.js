@@ -1,7 +1,6 @@
 //crosstab.js
 function Crosstab(_jsonData){
 	this.jsonData = _jsonData;
-	console.log(this.jsonData);
 }
 Crosstab.prototype.draw = function(){
 	//init will draw the outer svg
@@ -62,8 +61,6 @@ Crosstab.prototype.drawFooter = function(_axis,_isHorizontal){
 		_top = 40,
 		_x = _top+_chartHeight,
 		_id = "footerLine";
-		
-	//_axis.drawLines(_width,1,0,_chartHeight+top,_isHorizontal,_id,0);
 };
 Crosstab.prototype.drawBody = function(xaxis,yaxis){
 	var crosstab = this,

@@ -1,4 +1,12 @@
 /*Style properties*/
+body{  
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;  
+}
 .verticalTicksClass{
 	stroke: #000;
 }
@@ -9,9 +17,79 @@
 .headerTicksClass,.footerLineClass{
 	stroke: #000;
 }
-.horizontalLinesClass,.verticalLinesClass{
+.horizontalLinesClass,.verticalLinesClass,.yaxisTicksClass{
 	stroke: #000000;
+	stroke-width:1px;
 }
 .crosstabRectClass{
 	fill:blue;
+
+}
+.containerClass{
+	stroke: rgba(0,0,0,0.4);
+	fill:transparent;
+}
+.backgroundBoxClass{
+	stroke: rgba(0,0,0,0.2);
+	fill:#F7F7F7;
+}
+.titleBoxClass{
+	stroke: #2873e2;
+	fill: #d4e4fc;
+}
+.titleTextClass{
+	fill: #2873e2;
+}
+.svgPoly{
+  fill:none;
+  stroke: #1F7ACB;
+  stroke-width:6;
+}
+.svgPath{
+  fill:none;
+  stroke: #1F7ACB;
+  stroke-width:6;
+}
+.graphCircle{
+  stroke:#1F7ACB;
+  stroke-width:2;
+  fill:#fff;
+  -webkit-transition: fill 1s, -webkit-transform 1s;
+  transition: fill 1s, transform 1s;
+  -webkit-transition: all 0.3s, -webkit-transform 0.3s;
+  transition: all 0.3s, transform 0.3s;
+}
+.hairlineClass{
+  stroke:red;
+  stroke-width:1px;
+  stroke-dasharray:3,3;
+}
+.tooltipClass{
+  stroke:#6A463A;
+  stroke-width:0.6;
+  fill:#FFD9CC;
+
+}
+.tooltipTextClass{
+	color: red;
+}
+.dragableDiv{
+  position: absolute;
+  border: 1px solid rgba(102, 0, 153,0.3);
+  background:rgba(0,0,0,0.2);
+  top:0px;
+  left:0px;
+  width: 0px;
+  height: 0px;
+  visibility: hidden;
+}
+.barClass{
+ -webkit-transition: all 0.3s, -webkit-transform 0.3s;
+  transition: all 0.3s, transform 0.3s;
+}
+.mainCaptionHeaderClass{
+	font-weight: bold;
+}
+.subCaptionHeaderClass{
+	fill:#9BA3A4;
 }

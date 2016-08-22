@@ -22,9 +22,10 @@ Engine.prototype.render = function(renderType){
         svgWidth,
         chartHeight,
         chartWidth,
+        marginx,
+        marginy,
         i,
 		j;
-		//maxMinAvg = chartData.maxMinAvg;  // iteration required
 
 	if(typeof renderType === "undefined"){
 		renderType = chartType;
@@ -53,11 +54,33 @@ Engine.prototype.render = function(renderType){
         crosstab.draw();
 
 	}else if(renderType == "line" || renderType == "column"){
-    	for(i in chartData){
-            //beautify max min
-            maxMinAvg = chartData[i].maxMinAvg;
-            temp = engine.beautify(maxMinAvg[0],maxMinAvg[1]);
-            chartData[i].newMaxMin = temp;
+        if(chartType == "line" || chartType == "column"){
+            for(i in chartData){
+                //beautify max min
+                maxMinAvg = chartData[i].maxMinAvg;
+                temp = engine.beautify(maxMinAvg[0],maxMinAvg[1]);
+                chartData[i].newMaxMin = temp;
+            }  
+  
+    
+        }
+
+        svgWidth = (typeof info.width === "undefined") ? 400 : info.width;
+        marginx = 50;
+        chartWidth = svgWidth - marginx;
+        svgHeight = (typeof info.height === "undefined") ? 400 : info.height;
+        marginy = 50;
+        chartHeight = svgHeight - marginy;
+
+        obj.svgDetails = {svgHeight:svgHeight,svgWidth:svgWidth,chartHeight:chartHeight,chartWidth:chartWidth,
+            marginx:marginx,marginy:marginy};
+
+        if(renderType == "line"){
+            line = new Line(obj);
+            line.draw();
+        }else{
+            column = new Column(obj);
+            column.draw();
         }
 	}
 };
@@ -217,62 +240,3 @@ Engine.prototype.beautify = function(max,min){
                 }  
     return[Number(newmax),Number(newmin)]; 
 };
-
-
-/*
-
-	var engine = this,
-		jsondata = engine && engine.model,
-		data = jsondata && jsondata.data,
-		lenData = data && data.length,
-		info = jsondata && jsondata.chart,
-		model = jsondata && jsondata.model,
-		
-		zones = model && model.zones,
-		lenZones = zones.length,
-		chartType = info && info.chartType,
-		maxArr = [],
-		minArr = [],
-		scrWidth = window.innerWidth-20,
-		scrHeight = window.innerHeight-20,
-		svgW,
-		svgH,
-		pps,
-		numOfCharts,
-		barH,
-		barMaxW,
-		barS,
-		crosstab,
-		i;
-
-		if (chartType == "line") {
-
-		}else if(chartType == "column"){
-
-		}else if(chartType == "crosstab"){
-			//get max values according to zones && min set to 0
-			for(i = 2;i < lenZones; i++){
-				maxArr.push(this.beautifyMax(this.getMax(data,zones[i])));
-			}
-
-			svgW = scrWidth;
-			svgH = 700;
-			chartH = svgH -100;
-			pps = chartH/lenData;        //pixel per scale
-			//pps = (pps<4) ? 4 : pps;     //resetting pps to set bounds
-			barS = 2;//(pps *25)/100; 		 //spaces between two bars
-			barH = pps- 2*barS;//(pps - 2*barS); 		 //height of each bar
-			barMaxW = scrWidth/lenZones; //width of each Chart
-			console.log(lenData,pps,barH,barS);
-			jsondata.svg = {svgW,svgH,chartH,barS,barH,barMaxW}; //add svg information to json
-			model.maxvalues = maxArr;
-
-			crosstab = new Crosstab(jsondata);
-			crosstab.draw();
-
-		}else{
-			//throw Error
-
-		}
-
-*/

@@ -2,46 +2,54 @@ function Axis(_canvas,_element){
 	this.canvas  = _canvas;
 	this.element = _element;
 };
-Axis.prototype.drawTicks = function(_lenTick,_width,_numTicks,_x,_y,_isVertical,_id,_posTicks){
-	if(_numTicks<1){
-		return;
-	}
+Axis.prototype.drawTicks = function(_length,area,numOfTicks,x,y,isVertical,id,extra){
+	
 	var axis = this,
 		svg = axis && axis.element,
 		canvas = axis && axis.canvas,
-		i,
-		space = _width/_numTicks,
-		posTicks = space*_posTicks,
-		tmpSpace,
-		lineId = _id,
-		classname = _id+"Class",
+		className = id+"Class",
+		_length = (typeof _length === "undefined")? 5 : _length,
+		_extra = (typeof extra === "undefined")? 0 : extra,
+		startingPoint,
+		i,	
 		tickPos1,
-		tickPos2;
+		tickPos2,
+		plotPointX,
+		plotPointY,
+		division = area / numOfTicks;
 
-	if(_isVertical){
-		tickPos1 = _y-_lenTick;
-		tickPos2 = _y;
-		for(i = 0; i<_numTicks+1; i++){//y fixed x changes
-			tmpSpace = space*i+posTicks;
-			canvas.createLines(svg,tmpSpace,tickPos1,tmpSpace,tickPos2,classname,lineId);
+	if(isVertical){
+		startingPoint = x;
+		tickPos1 = y;
+		tickPos2 = y -_length;
+		for(i = 0;i <=numOfTicks+_extra;i++){
+			plotPointX = startingPoint + i*division ;
+			canvas.createLines(svg,plotPointX,tickPos1,plotPointX,tickPos2,className,id);
 		}
 	}else{
-		for(i = 0; i<_numTicks+1; i++){//x fixed y changes
-			tickPos1 = _x-_lenTick;
-			tickPos2 = _x;
-			tmpSpace = space*i+posTicks;
-			canvas.createLines(svg,tickPos1,tmpSpace,tickPos2,tmpSpace,classname,lineId);
-		}
+		startingPoint = y;
+		tickPos1 = x;
+		tickPos2 = x - _length;
+		for(i = 0;i <=numOfTicks+_extra;i++){
+			plotPointY = startingPoint + i*division ;
+			canvas.createLines(svg,tickPos1,plotPointY,tickPos2,plotPointY,className,id);
+		}		
 	}
-	
 };
-Axis.prototype.drawLabels = function(_width,_textArr,_x,_y,_id,_posTexts,_pos,_rightToLeft){
+Axis.prototype.drawSingleText = function(x,y,text,id,pos,fontSize){
+	var axis = this,
+		svg = axis && axis.element,
+		canvas = axis && axis.canvas,
+		textobj = canvas.createText(svg,x,y,text,"#000",fontSize,pos,id);
+		return textobj;
+};
+Axis.prototype.drawLabels = function(_width,_textArr,_x,_y,_id,_posTexts,_pos,_rightToLeft,fontSize){
 	var axis = this,
 		svg = axis && axis.element,
 		canvas = axis && axis.canvas,
 		lenArr,
 		textColor = "#000",
-		fontSize = 17,
+		fontSize = (typeof fontSize === "undefined")? 17:fontSize,
 		id = _id+"Class",
 		space,
 		pos,
@@ -54,7 +62,7 @@ Axis.prototype.drawLabels = function(_width,_textArr,_x,_y,_id,_posTexts,_pos,_r
 		if(_rightToLeft){
 			for(i =0; i< lenArr; i++){
 				textVal = _textArr[i];
-				pos = space * i + space * _pos;
+				pos = space * i + space * _pos+_x;
 				canvas.createText(svg,pos,_y,textVal,textColor,fontSize,_posTexts,id);
 			}
 		}else{//top to bottom
@@ -166,4 +174,43 @@ Axis.prototype.drawCrossTabLines = function(_width,_height,_numTicks,_x,_y,_isVe
 			element.style.stroke = "#000";
 		}
 	}
-}
+};
+Axis.prototype.calculateTicksNum = function(ub,lb){
+	var yaxisticks;
+   if((ub-lb)==ub){
+      yaxisticks = 4;
+   }else if((ub-lb)==0){
+      yaxisticks = 2;
+   }else{
+      if((ub/lb)<3){
+         yaxisticks = 4
+      }else if((ub/lb)<6){
+         yaxisticks = 5;
+      }else{
+         yaxisticks = 6;
+      }  
+   }
+   return yaxisticks;
+};
+Axis.prototype.sortedTitle = function(titleY){
+	
+    if(titleY % 1 != 0){
+        titleY = titleY.toFixed(2);
+    }
+    var titleY_0 = titleY.toString().split(".")[0];
+    if (titleY_0.substring(0, 1) == '-') {
+      titleY_0 = Number(titleY_0.substring(1));
+      if (titleY_0 > 999 && titleY_0 < 999999) {
+        titleY = "-"+(titleY_0 / 1000).toFixed(1) + "K";
+      } else if (titleY_0 > 999999) {
+        titleY = "-"+(titleY_0 / 1000000).toFixed(1) + "M";
+      }
+    } else {
+      if (titleY_0 > 999 && titleY_0 < 999999) {
+        titleY = (titleY_0 / 1000).toFixed(1) + "K";
+      } else if (titleY_0 > 999999) {
+        titleY = (titleY_0 / 1000000).toFixed(1) + "M";
+      }
+    }
+    return titleY;
+};

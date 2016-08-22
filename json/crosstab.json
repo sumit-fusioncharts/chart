@@ -11,6 +11,7 @@
       "minLossColor":"#FFFFFF",
       "numberprefix":"$",
       "chartDiv":"chart"
+
    },
    "data":[
       {
@@ -299,13 +300,6 @@
          "region":"East",
          "sop":5654,
          "sos":11571
-      },
-      {
-         "product":"Tea",
-         "sub_product":"Green Tea",
-         "region":"South",
-         "sop":104,
-         "sos":27100
       },
       {
          "product":"Tea",
