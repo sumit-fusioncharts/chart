@@ -24,6 +24,8 @@ Column.prototype.draw = function(){
 		svgLeft,
 		flag = false,
 		svgTop,
+		divPosX,
+		divPosY,
 		dragable;
 		//creating canvas element
 		canvas = new Canvas();
@@ -35,29 +37,28 @@ Column.prototype.draw = function(){
 
 		for(i in data){
 			svg = canvas.createSvg(svgW,svgH,svgId,svgClass,svgAppend);
-			svgLeft = svg.getBoundingClientRect().left;
-	        svgTop = svg.getBoundingClientRect().top;
-	        svg.addEventListener("mousedown", function(event) {
-	            flag = true;
-	            divPosX = event.clientX;
-	            divPosY = event.clientY;
-	            column.drawDragableDiv(event,svg,flag);
-	        }, false);
-	        svg.addEventListener("mousemove",function(event){
-	        	if(flag){
-	        		column.extendDiv(event,divPosX,divPosY,svgLeft,svgTop);
-	        	}
-	        },false);
-	        dragable.addEventListener("mousemove",function(event){
-	        	if(flag){
-	        		column.extendDiv(event,divPosX,divPosY);
-	        	}
-	        },false);
-	        dragable.addEventListener("mouseup",function(event){
-	        	flag = false;
-	        	column.resetDiv(event,svg,dragable);
-	        	console.log("called");
-	        },false);
+        (function(svg, flag,divPosX, divPosY , i,dragable){
+            svg.addEventListener("mousedown", function(event) {
+                flag = true;
+                divPosX = event.clientX;
+                divPosY = event.clientY;
+                column.drawDragableDiv(event, svg, flag);
+            }, false);
+            svg.addEventListener("mousemove", function(event) {
+                if (flag) {
+                    column.extendDiv(event, divPosX, divPosY, svg);
+                }
+            }, false);
+            dragable.addEventListener("mousemove", function(event) {
+                if (flag) {
+                    column.extendDiv(event, divPosX, divPosY, svg);
+                }
+            }, false);
+            dragable.addEventListener("mouseup", function(event) {
+                flag = false;
+                column.resetDiv(event, svg, dragable);
+            }, false);
+        })( svg, flag,divPosX, divPosY , i,dragable);
 
 			xaxis = new Xaxis(canvas,svg);
 			yaxis = new Yaxis(canvas,svg);
@@ -207,54 +208,114 @@ Column.prototype.plotData = function(data,svgDetails,xaxis,axis){
     box = yaxis.drawBox(marginx,marginy,_width,_height,"container",false);
 		column.eventHaircolumn(box, marginx);
 };
-Column.prototype.drawDragableDiv = function(e,svg,flag){
-	var startX = event.pageX,
+Column.prototype.drawDragableDiv = function(e, svg, flag) {
+    var startX = event.pageX,
         startY = event.pageY,
         dragable = document.getElementById("dragableDiv");
-        dragable.style.visibility = "visible";
-        dragable.style.cursor = "default";
-        dragable.style.top = (startY + scrY-3) + "px";
-    	dragable.style.left = (startX -3) + "px";
+    dragable.style.visibility = "visible";
+    dragable.style.cursor = "default";
+    dragable.style.top = (startY + scrY +5) + "px";
+    dragable.style.left = (startX +5) + "px";
 };
-Column.prototype.resetDiv = function(e,s,d){
-	dragable = document.getElementById("dragableDiv");
+Column.prototype.resetDiv = function(e, s, d) {
+    dragable = document.getElementById("dragableDiv");
     dragable.style.visibility = "hidden";
     dragable.style.width = "0px";
     dragable.style.height = "0px";
     dragable.style.top = "0px";
     dragable.style.left = "0px";
-    s.removeEventListener("mousemove",column.extendDiv,false);
-    d.removeEventListener("mousemove",column.extendDiv,false);
+    s.removeEventListener("mousemove", column.extendDiv, false);
+    d.removeEventListener("mousemove", column.extendDiv, false);
 };
-Column.prototype.extendDiv =  function(event,x,y,left,top){
-	var currentPosX = event.pageX,
-		currentPosY = event.pageY,
-		w = currentPosX - x,
-        h = (currentPosY ) - y,
-		d = document.getElementById("dragableDiv");
+Column.prototype.extendDiv = function(event, x, y, svg) {
+    var line = this,
+        currentPosX = event.pageX,
+        currentPosY = event.pageY,
+        w = currentPosX - x,
+        h = (currentPosY) - y,
+        x1,
+        y1,
+        x2,
+        y2,
+        d = document.getElementById("dragableDiv");
 
     if (w < 0 && h < 0) {
-        y = (currentPosY );
+        y = (currentPosY);
         h *= 1;
         x = currentPosX;
         w *= -1;
     }
     if (w >= 0 && h < 0) {
-        y = (currentPosY );
+        y = (currentPosY);
         h *= -1;
     }
     if (w < 0 && h >= 0) {
         x = currentPosX;
         w *= -1;
     }
+    y1 = (y + scrY);
+    x1 = (x + scrX);
+    
+    var svgLeft = svg.getBoundingClientRect().left,
+         svgTop = svg.getBoundingClientRect().top;
+    
+    x2 = currentPosX - svgLeft;
+    y2 = currentPosY - svgTop - scrY;
+    d.style.top = y1 + "px";
+    d.style.left = x1 + "px";
+    d.style.width = (w - scrX) + "px";
+    d.style.height = (h - scrY) + "px";
+    
+    x1 -= svgLeft;
+    y1 -= (svgTop+scrY); 
+    
+    column.highLightPoints(x1, y1, x2, y2);
 
-    d.style.top = (y+scrY) + "px";
-    d.style.left = (x+scrX) + "px";
-    d.style.width = (w-scrX) + "px";
-    d.style.height = (h-scrY) + "px";
-
-
-}
+};
+Column.prototype.highLightPoints = function(left, top, currentPosX, currentPosY) {
+	    var line = this,
+        _plotPoints = line && line.plotPoints,
+        x,
+        y,
+        x1,
+        x2,
+        y1,
+        element,
+        i,
+        j;
+        
+     for (i in _plotPoints) {
+         for (j in _plotPoints[i].dataArr) {
+    		x1 = Number(_plotPoints[i].dataArr[j].point);
+            x2 = Number(_plotPoints[i].dataArr[j].pointx2)+x1;
+            y1 = Number(_plotPoints[i].dataArr[j].pointy);
+            y2 = Number(_plotPoints[i].dataArr[j].pointy2);
+            element = _plotPoints[i].dataArr[j].element;
+            //if(i=="0" && j=="0")console.log(left,top,currentPosX, currentPosY,x1,x2,y1,y2)
+            if(left<x2 && currentPosX>x1 && top >= y1){
+            	
+            	element.setAttribute("style", "stroke:#00FF00");
+            }else{
+            	element.setAttribute("style", "stroke:#096AB5");
+            }
+         }
+     }
+};
+Column.prototype.eventHairLine = function(box, marginx) {
+    var line = this,
+        hairline = line.lineArr,
+        rectLeft = box.getBoundingClientRect().left;
+    box.addEventListener("mousemove", function(event) {
+        OnAddEventListener((event.pageX - rectLeft + marginx), rectLeft, box);
+    }, false);
+    //box.addEventListener("mouseonelement", line.moveCrosshair, false);
+    box.addEventListener("mouseout", function() {
+        line.hideCrossHair();
+    }, false);
+    box.addEventListener("mouseonelement", function(event) {
+        line.moveCrosshair(event);
+    }, false);
+};
 Column.prototype.eventHaircolumn = function(box, marginx){
 	var column = this,
 	rectLeft = box.getBoundingClientRect().left;;
@@ -287,7 +348,8 @@ Column.prototype.highLightCol = function(e){
             temp2 = Number(_plotPoints[i].dataArr[j].pointx2);
             temp3 = Number(_plotPoints[i].dataArr[j].pointy);
             tooltip = _plotPoints[i].tooltip;
-            if (e.detail.x > (temp) && e.detail.x < (temp+temp2) && e.detail.top > temp3) {
+            element = _plotPoints[i].dataArr[j].element;
+            if (e.detail.x >= (temp) && e.detail.x <= (temp+temp2) && e.detail.top >= temp3) {
             	data = _plotPoints[i].dataArr[j].data;
             	
             	currentPosX = e.detail.x;
@@ -303,12 +365,12 @@ Column.prototype.highLightCol = function(e){
                     currentPosY -= 35;
                 }
             	column.manageTooltip(data, currentPosX, currentPosY, tooltip);
-            	element = _plotPoints[i].dataArr[j].element;
+            	
             	element.setAttribute("style", "fill:#AA3939");
             }
             else{
 
-            	element = _plotPoints[i].dataArr[j].element;
+            	
             	element.setAttribute("style", "fill:#096AB5");
             }
         }

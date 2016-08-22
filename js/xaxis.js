@@ -90,6 +90,7 @@ Xaxis.prototype.drawColumnData = function(dataset,width,arr){
 		    	point:xyCor[0],
 		    	pointy:xyCor[1],
 		    	width:width,
+		    	pointy2:xyCor[1],
 		    	pointx2:xyCor[3],
 		    	element:barElement,
 		    	data:arr[i]

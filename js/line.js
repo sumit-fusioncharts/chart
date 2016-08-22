@@ -3,7 +3,7 @@ function Line(_jsonData) {
     this.jsonData = _jsonData;
     this.lineArr = [];
     this.plotPoints = [];
-    this.oparatingFlag = false;
+    this.flag = false;
 
     console.log(this.jsonData);
 }
@@ -25,44 +25,46 @@ Line.prototype.draw = function() {
         svgAppend = document.getElementById(chartDiv),
         i,
         temp,
-        divPosX, divPosY,
-        flag = false,
-        svgLeft,
         dragable,
-        svgTop;
+        flag = line.flag,
+        divPosX, divPosY;
 
     canvas = new Canvas();
+
 
     dragable = document.createElement('div');
     dragable.className = 'dragableDiv';
     dragable.id = 'dragableDiv';
-    document.body.appendChild(dragable);
+    svgAppend.appendChild(dragable);
 
     for (i in data) {
 
+
         svg = canvas.createSvg(svgW, svgH, svgId, svgClass, svgAppend);
-        
-	(function(svg, flag,divPosX, divPosY , i,dragable){
-        svg.addEventListener("mousedown", function(event) {
-            flag = true;
-            divPosX = event.clientX;
-            divPosY = event.clientY;
-            line.drawDragableDiv(event, svg, flag);
-        }, false);
-        svg.addEventListener("mousemove", function(event) {
-            if (flag) {
-                line.extendDiv(event, divPosX, divPosY, svg);
-            }
-        }, false);
-        dragable.addEventListener("mousemove", function(event) {
-            if (flag) {
-                line.extendDiv(event, divPosX, divPosY, svg);
-            }
-        }, false);
-        dragable.addEventListener("mouseup", function(event) {
-            flag = false;
-            line.resetDiv(event, svg, dragable);
-        }, false);})( svg, flag,divPosX, divPosY , i,dragable)
+        //drag event to every svg
+        (function(svg, flag,divPosX, divPosY , i,dragable){
+            svg.addEventListener("mousedown", function(event) {
+                flag = true;
+                divPosX = event.clientX;
+                divPosY = event.clientY;
+                line.drawDragableDiv(event, svg, flag);
+            }, false);
+            svg.addEventListener("mousemove", function(event) {
+                if (flag) {
+                    line.hideCrossHair();
+                    line.extendDiv(event, divPosX, divPosY, svg);
+                }
+            }, false);
+            dragable.addEventListener("mousemove", function(event) {
+                if (flag) {
+                    line.extendDiv(event, divPosX, divPosY, svg);
+                }
+            }, false);
+            dragable.addEventListener("mouseup", function(event) {
+                flag = false;
+                line.resetDiv(event, svg, dragable);
+            }, false);
+        })( svg, flag,divPosX, divPosY , i,dragable);
 
         xaxis = new Xaxis(canvas, svg);
         yaxis = new Yaxis(canvas, svg);
@@ -114,6 +116,7 @@ Line.prototype.drawBody = function(data, svgDetails, xaxis, yaxis, axis) {
         _height = chartH - marginy,
         i,
         temp,
+        flag = line.flag,
         yaxisLabel,
         tempArr = [],
         box,
@@ -133,7 +136,7 @@ Line.prototype.drawBody = function(data, svgDetails, xaxis, yaxis, axis) {
     }
 
     yaxis.drawInsideBox(marginx, marginy, _width, _height, numOfyaxisTicks, "backgroundBox", false);
-    //draw y axis labels			
+    //draw y axis labels            
     yaxis.drawLabels(_height, tempArr, marginx - 8, marginy, "yaxisLabel", "end", 0.06, false, 14);
     xaxis.drawLabels(chartW, axis, marginx / 2, chartH + 20, "yaxisLabel", "middle", 1, true, 14);
     temp = xaxis.drawHairLine(marginx, marginy, _height, "hairline");
@@ -196,30 +199,14 @@ Line.prototype.plotData = function(data, svgDetails, xaxis, axis) {
         rect: { x2, y2 }
     });
 };
-
-Line.prototype.eventHairLine = function(box, marginx) {
-    var line = this,
-        oFlag = line.oparatingFlag;
-    hairline = line.lineArr,
-        rectLeft = box.getBoundingClientRect().left;
-    box.addEventListener("mousemove", function(event) {
-        OnAddEventListener((event.pageX - rectLeft + marginx), rectLeft, box);
-    }, false);
-    box.addEventListener("mouseout", function() {
-        line.hideCrossHair();
-    }, false);
-    box.addEventListener("mouseonelement", function(event) {
-        line.moveCrosshair(event);
-    }, false);
-};
 Line.prototype.drawDragableDiv = function(e, svg, flag) {
     var startX = event.pageX,
         startY = event.pageY,
         dragable = document.getElementById("dragableDiv");
     dragable.style.visibility = "visible";
     dragable.style.cursor = "default";
-    dragable.style.top = (startY + scrY - 3) + "px";
-    dragable.style.left = (startX - 3) + "px";
+    dragable.style.top = (startY + scrY +5) + "px";
+    dragable.style.left = (startX +5) + "px";
 };
 Line.prototype.resetDiv = function(e, s, d) {
     dragable = document.getElementById("dragableDiv");
@@ -261,7 +248,7 @@ Line.prototype.extendDiv = function(event, x, y, svg) {
     x1 = (x + scrX);
     
     var svgLeft = svg.getBoundingClientRect().left,
-    	 svgTop = svg.getBoundingClientRect().top;
+         svgTop = svg.getBoundingClientRect().top;
     
     x2 = currentPosX - svgLeft;
     y2 = currentPosY - svgTop - scrY;
@@ -275,7 +262,7 @@ Line.prototype.extendDiv = function(event, x, y, svg) {
     
     line.highLightPoints(x1, y1, x2, y2);
 
-}
+};
 Line.prototype.highLightPoints = function(left, top, currentPosX, currentPosY) {
     var line = this,
         _plotPoints = line && line.plotPoints,
@@ -290,7 +277,7 @@ Line.prototype.highLightPoints = function(left, top, currentPosX, currentPosY) {
             y = Number(_plotPoints[i].dataArr[j].pointy);
             element = _plotPoints[i].dataArr[j].element;
 
-            if (left < (x - 5) && currentPosX > (x + 5) && (y + 5) > top && (y-5)<currentPosY) {
+            if (left < (x + 5) && currentPosX > (x - 5) && (y + 5) > top && (y-5)<currentPosY) {
                 element.setAttribute("r", "8");
             } else {
                 element.setAttribute("r", "5");
@@ -298,8 +285,26 @@ Line.prototype.highLightPoints = function(left, top, currentPosX, currentPosY) {
         }
     }
 };
+Line.prototype.eventHairLine = function(box, marginx) {
+    var line = this,
+        hairline = line.lineArr,
+        rectLeft = box.getBoundingClientRect().left;
+    box.addEventListener("mousemove", function(event) {
+        OnAddEventListener((event.pageX - rectLeft + marginx), rectLeft, box);
+    }, false);
+    //box.addEventListener("mouseonelement", line.moveCrosshair, false);
+    box.addEventListener("mouseout", function() {
+        line.hideCrossHair();
+    }, false);
+    box.addEventListener("mouseonelement", function(event) {
+        line.moveCrosshair(event);
+    }, false);
+};
+
+
 Line.prototype.moveCrosshair = function(e) {
     var line = this,
+        flag = line && line.flag,   
         _hairline = line && line.lineArr,
         _plotPoints = line && line.plotPoints,
         temp,
@@ -311,40 +316,43 @@ Line.prototype.moveCrosshair = function(e) {
         data, box, text,
         i,
         j;
-
+        console.log(flag)
     for (i in _hairline) {
         _hairline[i].setAttribute("visibility", "visible");
-        _hairline[i].setAttribute("x1", e.detail.x);
-        _hairline[i].setAttribute("x2", e.detail.x);
+        _hairline[i].setAttribute("x1", e.detail.x );
+        _hairline[i].setAttribute("x2", e.detail.x );
     }
 
     for (i in _plotPoints) {
-        box = _plotPoints[i].tooltip.tooltipBox;
-        text = _plotPoints[i].tooltip.tooltipText;
-        box.setAttribute("style", "visibility:hidden");
-        text.setAttribute("style", "visibility:hidden");
+            tooltip = _plotPoints[i].tooltip;
+            rect = _plotPoints[i].rect;
+            box = _plotPoints[i].tooltip.tooltipBox;
+            text = _plotPoints[i].tooltip.tooltipText;
+            box.setAttribute("style","visibility:hidden");
+            text.setAttribute("style","visibility:hidden");
+        
         for (j in _plotPoints[i].dataArr) {
             temp = Number(_plotPoints[i].dataArr[j].point);
-
+            element = _plotPoints[i].dataArr[j].element;
             if (e.detail.x > (temp - 5) && e.detail.x < (temp + 5)) {
+
+                box.setAttribute("style", "visibility:visible");
+                text.setAttribute("style", "visibility:visible");
                 data = _plotPoints[i].dataArr[j].data;
                 currentPosX = e.detail.x;
                 currentPosY = Number(_plotPoints[i].dataArr[j].pointy);
-                tooltip = _plotPoints[i].tooltip;
-                rect = _plotPoints[i].rect;
-                element = _plotPoints[i].dataArr[j].element;
-                if (e.detail.x > rect.x2 - rect.x2 / 5) {
+                if (e.detail.x > rect.x2 - rect.x2/5) {
                     currentPosX -= 90;
                 } else {
                     currentPosX += 10;
                 }
-                if (currentPosY > rect.x2 - rect.x2 / 2) {
+                if (currentPosY > rect.x2 - rect.x2/2) {
                     currentPosY -= 40;
                 }
                 line.manageTooltip(data, currentPosX, currentPosY, tooltip);
                 element.setAttribute("style", "stroke:red");
             } else {
-                element = _plotPoints[i].dataArr[j].element;
+                
                 element.setAttribute("style", "stroke:#1F7ACB");
             }
         }
@@ -354,8 +362,6 @@ Line.prototype.manageTooltip = function(data, x, y, tooltip) {
     var box = tooltip.tooltipBox,
         text = tooltip.tooltipText;
 
-    box.setAttribute("style", "visibility:visible");
-    text.setAttribute("style", "visibility:visible");
 
     box.setAttribute("x", x);
     box.setAttribute("y", y);
