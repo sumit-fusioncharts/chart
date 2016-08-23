@@ -11,11 +11,11 @@
         "chartsPositioning":"maxtomin"
     },"timestamp": 
     {
-        "time":  "Jan 01|Jan 02|Jan 03|Jan 04|Jan 05|Jan 06|Jan 07"
+        "time":  "Jan 01|Jan 02|Jan 03|Jan 04|Jan 05|Jan 06|Jan 07|jan 8"
     },"dataset":
     [{ 
         "title":"Items Sold",
-        "data":"||1||1|-13|85"
+        "data":"||1||1|-13|85|29"
     },{
         "title":"Visitors",
         "data":"81||37||122|53|60"

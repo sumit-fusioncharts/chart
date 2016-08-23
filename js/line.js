@@ -100,7 +100,7 @@ Line.prototype.drawBody = function(data, svgDetails, xaxis, yaxis, axis) {
         _width = chartW - marginx,
         _height = chartH - marginy,
         i,
-        temp,
+        hairline,
         flag = line.flag,
         yaxisLabel,
         tempArr = [],
@@ -121,11 +121,13 @@ Line.prototype.drawBody = function(data, svgDetails, xaxis, yaxis, axis) {
     //draw y axis labels            
     yaxis.drawLabels(_height, tempArr, marginx - 8, marginy, "yaxisLabel", "end", 0.06, false, 14);
     xaxis.drawLabels(chartW, axis, marginx / 2, chartH + 20, "yaxisLabel", "middle", 1, true, 14);
-    temp = xaxis.drawHairLine(marginx, marginy, _height, "hairline");
-    lineArr.push(temp);
+    //hairline created and pushed in linearr
+    hairline = xaxis.drawHairLine(marginx, marginy, _height, "hairline");
+    lineArr.push(hairline);
 
     //draw container
     box = yaxis.drawBox(marginx, marginy, _width, _height, "container", false);
+    //add custom event to box container
     line.eventHairLine(box, marginx);
 
 };
@@ -152,26 +154,29 @@ Line.prototype.plotData = function(data, svgDetails, xaxis, axis) {
         y,
         xcord,
         ycord,
-        barHight,
         xaxisticks = axis.length,
         plotRatio = (chartH - 50) / (newmax - newmin),
         x2,
         y2;
-
+    //converting actual data to coordinates    
     for (i = 0; i < dataArrayLen; i++) {
+        //validation for data array only plot if not null or undefined
         if (typeof dataArray[i] != "undefined" && dataArray[i] != null) {
             y = Number(dataArray[i]);
             xcord = (divisionx * i) + marginx + divisionx / 2;
-            barHight = ((y - newmin) * plotRatio);
-            ycord = (chartH - barHight);
+            ycord = (chartH - ((y - newmin) * plotRatio));
             datasetStr += xcord + "," + ycord + " ";
             tempArr.push(y);
         }
     } //successfully displaying Data String for plotting
     //draw tooltip
-
     x2 = marginx + chartH;
     y2 = marginy + chartH;
+    /*  plot point contains dataArr which draws the coordinates
+        and returns coordinates, element object
+        tooltip contains tooltip rect and text per box object
+        rect key contains rect height and width
+    */
     line.plotPoints.push({
         dataArr: xaxis.drawPlottedData(datasetStr, 5, tempArr),
         tooltip: {
@@ -181,59 +186,15 @@ Line.prototype.plotData = function(data, svgDetails, xaxis, axis) {
         rect: { x2, y2 }
     });
 };
-Line.prototype.drawDragableDiv = function(e, svg, flag) {
-    var startX = event.pageX,
-        startY = event.pageY,
-        dragable = document.getElementById("dragableDiv");
-    dragable.style.visibility = "visible";
-    dragable.style.cursor = "default";
-    dragable.style.top = (startY + scrY + 5) + "px";
-    dragable.style.left = (startX + 5) + "px";
-};
+
 
 Line.prototype.extendDiv = function(event, x, y, svg) {
     var line = this,
-        currentPosX = event.pageX,
-        currentPosY = event.pageY,
-        w = currentPosX - x,
-        h = (currentPosY) - y,
-        x1,
-        y1,
-        x2,
-        y2,
-        d = document.getElementById("dragableDiv");
-
-    if (w < 0 && h < 0) {
-        y = (currentPosY);
-        h *= 1;
-        x = currentPosX;
-        w *= -1;
-    }
-    if (w >= 0 && h < 0) {
-        y = (currentPosY);
-        h *= -1;
-    }
-    if (w < 0 && h >= 0) {
-        x = currentPosX;
-        w *= -1;
-    }
-    y1 = (y + scrY);
-    x1 = (x + scrX);
-
-    var svgLeft = svg.getBoundingClientRect().left,
-        svgTop = svg.getBoundingClientRect().top;
-
-    x2 = currentPosX - svgLeft;
-    y2 = currentPosY - svgTop - scrY;
-    d.style.top = y1 + "px";
-    d.style.left = x1 + "px";
-    d.style.width = (w - scrX) + "px";
-    d.style.height = (h - scrY) + "px";
-
-    x1 -= svgLeft;
-    y1 -= (svgTop + scrY);
-
-    line.highLightPoints(x1, y1, x2, y2);
+        divPoints;
+    //position-extend div on mouse move
+    divPoints = line.positionDragDiv(event, x, y, svg);
+    //highLight selected div with dragdiv
+    line.highLightPoints(divPoints[0], divPoints[1], divPoints[2], divPoints[3]);
 };
 Line.prototype.highLightPoints = function(left, top, currentPosX, currentPosY) {
     var line = this,
@@ -288,12 +249,8 @@ Line.prototype.moveCrosshair = function(e) {
         data, box, text,
         i,
         j;
-
-    for (i in _hairline) {
-        _hairline[i].setAttribute("visibility", "visible");
-        _hairline[i].setAttribute("x1", e.detail.x);
-        _hairline[i].setAttribute("x2", e.detail.x);
-    }
+        //sync hairline with mousemove
+        line.positionHairline(_hairline,e.detail.x);
 
     for (i in _plotPoints) {
         tooltip = _plotPoints[i].tooltip;
@@ -323,9 +280,10 @@ Line.prototype.moveCrosshair = function(e) {
                 }
                 line.manageTooltip(data, currentPosX, currentPosY, tooltip);
                 element.setAttribute("style", "stroke:#8254A8;");
+                element.setAttribute("r", "6");
             } else {
-
                 element.setAttribute("style", "stroke:#1F7ACB");
+                element.setAttribute("r", "5");
             }
         }
     }
