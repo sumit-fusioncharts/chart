@@ -1,10 +1,19 @@
 //engine.js
-function Engine(_object){
+function Engine(_object,customFun){
 	if(_object==false){
 		//unable to parse show error
 	}
-	this.obj = _object;
+    var eng = this;
+	eng.obj = _object;
+    eng.customFun = customFun;
+    console.log(eng.obj);
 }
+Engine.prototype.setChartOrder = function(dataObj){
+    var eng = this,
+        data = dataObj,
+        customFun = eng.customFun;
+    console.log(customFun);
+};
 Engine.prototype.render = function(renderType){
 	var engine = this,
 		obj = engine && engine.obj,
@@ -24,6 +33,7 @@ Engine.prototype.render = function(renderType){
         chartWidth,
         marginx,
         marginy,
+        order,
         i,
 		j;
 
@@ -51,7 +61,8 @@ Engine.prototype.render = function(renderType){
             barHeight:barHeight,barSpace:barSpace};
 
         crosstab = new Crosstab(obj);
-        crosstab.draw();
+        order = engine.setChartOrder(chartData);
+        crosstab.draw(order);
 
 	}else if(renderType == "line" || renderType == "column"){
         if(chartType == "line" || chartType == "column"){
